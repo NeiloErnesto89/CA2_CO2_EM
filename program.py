@@ -1,4 +1,4 @@
-import requests
+﻿import requests
 import json
 import pprint
 import time
@@ -97,6 +97,7 @@ class ApiConnector:
     def print_data_from_api(self):
         api_result = self.get_data_from_api()
         api_response = api_result.json()
+        print(api_response)
         pprint.pprint(api_response)
         
     def print_api_key(self):
@@ -127,42 +128,42 @@ ApiConnector(aviation_api_key).check_server_is_running()
 # To Be Added Somewhere Later
 # Co2 Formula
 
-def calculate_co2_emissions(flight_distance, number_of_seats, passenger_load_factor, cargo_factor, cabin_class_weight_factor, emission_factor, multiplier, preproduction_factor, aircraft_factor, airport_infrastructure_emission):
+def calculate_co2_emissions(flight_distance):
    """
    The following formula is used to calculate the total CO2-equivalent emissions:
-   ?? = ()???? ?? +???? +?? / ?? ? ??????) ? (?? ?????) ? ???? ? (???? ? ?? + ??)+ ???? ? ?? + ?
-       # s = number_of_seats # Shorthaul -> 153.51 , Longhaul -> 280.21
-    # plf = passenger_load_factor # Shorthaul -> 0.82 ,  Longhaul -> 0.82 
-    # cf = cargo_factor # Shorthaul -> 0.93 ,  Longhaul -> 0.74 
+   𝑬 = ()𝒂𝒙 𝟐 +𝒃𝒙 +𝒄 / 𝑺 ∗ 𝑷𝑳𝑭) ∗ (𝟏 −𝑪𝑭) ∗ 𝑪𝑾 ∗ (𝑬𝑭 ∗ 𝑴 + 𝑷)+ 𝐀𝐅 ∗ 𝐱 + �
+   # s = number_of_seats # Shorthaul -> 153.51 , Longhaul -> 280.21
+   # plf = passenger_load_factor # Shorthaul -> 0.82 ,  Longhaul -> 0.82 
+   # cf = cargo_factor # Shorthaul -> 0.93 ,  Longhaul -> 0.74 
    """
    
-    if (is_long_haul):
-        s = 280.21
-        plf = 0.82
-        cf = 0.74
-        a_func = 0.0001
-        b_func = 7.104
-        c_func = 5044.93
-    else:
-        s = 153.51
-        plf = 0.82
-        cf = 0.93
-        a_func = 0
-        b_func = 2.714
-        c_func = 1166.52
+   if (is_long_haul(flight_distance)):
+       s = 280.21
+       plf = 0.82
+       cf = 0.74
+       a_func = 0.0001
+       b_func = 7.104
+       c_func = 5044.93
+   else:
+       s = 153.51
+       plf = 0.82
+       cf = 0.93
+       a_func = 0
+       b_func = 2.714
+       c_func = 1166.52
         
-    x = flight_distance
+   x = flight_distance
 
-    cw = 2.40 
-    ef = 3.15
-    m = 2
-    p = 0.54
-    af = air 0.00038
-    afm = 11.68
+   cw = 2.40 
+   ef = 3.15
+   m = 2
+   p = 0.54
+   af = 0.00038
+   afm = 11.68
 
 
-    function_result = (a_func*x**2) + (b_funct*x) + c_func # quadratic equations result
-    return  function_result / (s * plf)  * (1 - cf) * cw * (ef * m + p) + (af * x) + amf
+   function_result = (a_func*x**2) + (b_funct*x) + c_func # quadratic equations result
+   return  function_result / (s * plf)  * (1 - cf) * cw * (ef * m + p) + (af * x) + amf
 
 
 def is_long_haul(flight_distance):
