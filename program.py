@@ -87,7 +87,7 @@ class ApiConnector:
     
     def __init__(self, api_key):
         self.api_key = {'access_key': api_key}
-        self.api_url = 'http://api.aviationstack.com/v1/flights/'
+        self.api_url = 'http://api.aviationstack.com/v1/flights'
         
     def get_data_from_api(self):
         # Get data from api
@@ -121,3 +121,27 @@ ApiConnector(aviation_api_key).check_server_is_running()
 
 
 
+
+# To Be Added Somewhere Later
+# Co2 Formula
+
+def calculate_co2_emissions(flight_distance, number_of_seats, passenger_load_factor, cargo_factor, cabin_class_weight_factor, emission_factor, multiplier, preproduction_factor, aircraft_factor, airport_infrastructure_emission):
+    x = flight_distance
+    s = number_of_seats # Shorthaul -> 153.51 , Longhaul -> 280.21
+    plf = passenger_load_factor # Shorthaul -> 0.82 ,  Longhaul -> 0.82 
+    cf = cargo_factor # Shorthaul -> 0.93 ,  Longhaul -> 0. 
+    cw = cabin_class_weight_factor # Shorthaul -> 2.40 ,  Longhaul -> 2.40 
+    ef = emission_factor # Both 3.15
+    m = multiplier # 2 
+    p = preproduction_factor # Both 0.54
+    af = aircraft_factor #Both 0.00038
+    afm = airport_infrastructure_emission #Both 0.00038
+    #Constants for quadratic equations
+    a_func = 0#Shorthaul -> 0.0000, Longhaul -> 0.0001
+    b_func = 0#Shorthaul --> 2.714, Longhaul -> 7.104
+    c_func = 0#Shorthaul 1166.52, Longhaul -> 5044.93
+    function_result = (a_func*x**2) + (b_funct*x) + c_func 
+    return  function_result / (s * plf)  * (1 - cf) * cw * (ef * m + p) + (af * x) + amf
+
+
+    
