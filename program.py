@@ -144,4 +144,12 @@ def calculate_co2_emissions(flight_distance, number_of_seats, passenger_load_fac
     return  function_result / (s * plf)  * (1 - cf) * cw * (ef * m + p) + (af * x) + amf
 
 
+def is_long_haul(flight_distance):
+    # if flight_distance below 1500 mark as short haul
+    if (flight_distance < 1500):
+        return False
+    else:
+        return True
+
+
     
