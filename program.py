@@ -114,7 +114,6 @@ class ApiConnector:
             print('Server is running')
         else:
             print('Server is not running')
-
         
 
         
@@ -165,7 +164,7 @@ def calculate_co2_emissions(flight_distance):
 
 
    function_result = (a_func*x**2) + (b_func*x) + c_func # quadratic equations result
-   return  function_result / (s * plf)  * (1 - cf) * cw * (ef * m + p) + (af * x) + amf
+   return  function_result / (s * plf)  * (1 - cf) * cw * (ef * m + p) + (af * x) + afm
 
 
 def is_long_haul(flight_distance):
@@ -178,10 +177,12 @@ def is_long_haul(flight_distance):
 
 
 def calculate_distance(start_point, end_point):
-    def to_radians(degrees):
+    # start_point, end_point in format [latitude, longitude] can get that from airports api
     # Convertion to Radians so we can use math to check the distance
+    def to_radians(degrees):
         return math.pi * degrees / 180
-    # start_point, end_poin in format [latitude, longitude] can get that from airports api
+
+
     EARTH_RADIUS = 6.371E3
 
     p1 = to_radians(start_point[0])
