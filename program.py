@@ -1,6 +1,7 @@
 ﻿import requests
 import json
 import pprint
+import math
 import time
 import datetime
 import os
@@ -85,20 +86,21 @@ class Emissions:
    
 class ApiConnector:
     
-    def __init__(self, api_key):
-        self.api_key = {'access_key': api_key}
+    def __init__(self):
+        self.api_key = {'access_key': '87589d7335551dbbde5ccef4eb116749'}
         self.api_url = 'http://api.aviationstack.com/v1/flights'
         
     def get_data_from_api(self):
         # Get data from api
-        api_result = requests.get(self.api_url, params=self.api_key)
+        api_result = requests.get(self.api_url, self.api_key)
         return api_result 
     
     def print_data_from_api(self):
         api_result = self.get_data_from_api()
-        api_response = api_result.json()
-        print(api_response)
-        pprint.pprint(api_response)
+        data = json.loads(api_result.text)
+        pprint.pprint(data)
+      #  api_response = api_result.json()
+       # print(json.dumps(api_response, indent=4, sort_keys=True))
         
     def print_api_key(self):
         # print api key
@@ -116,9 +118,9 @@ class ApiConnector:
         
 
         
-ApiConnector(aviation_api_key).print_api_key()
-ApiConnector(aviation_api_key).print_data_from_api()
-ApiConnector(aviation_api_key).check_server_is_running()
+# ApiConnector(aviation_api_key).print_api_key()
+ApiConnector().print_data_from_api()
+ApiConnector().check_server_is_running()
         
        
 
@@ -162,7 +164,7 @@ def calculate_co2_emissions(flight_distance):
    afm = 11.68
 
 
-   function_result = (a_func*x**2) + (b_funct*x) + c_func # quadratic equations result
+   function_result = (a_func*x**2) + (b_func*x) + c_func # quadratic equations result
    return  function_result / (s * plf)  * (1 - cf) * cw * (ef * m + p) + (af * x) + amf
 
 
@@ -174,4 +176,44 @@ def is_long_haul(flight_distance):
         return True
 
 
-    
+
+def calculate_distance(start_point, end_point):
+    def to_radians(degrees):
+    # Convertion to Radians so we can use math to check the distance
+        return math.pi * degrees / 180
+    # start_point, end_poin in format [latitude, longitude] can get that from airports api
+    EARTH_RADIUS = 6.371E3
+
+    p1 = to_radians(start_point[0])
+    p2 = to_radians(end_point[0])
+
+    delta_p = to_radians(start_point[0] - end_point[0])
+    delta_lambda = to_radians(start_point[1] - end_point[p1])
+
+    calc =  math.sin(0.5 * delta_p)**2 + math.cos(p1) * math.cos(p2) * math.sin(0.5 * delta_lambda)**2
+    c = 2 * math.atan2(math.sqrt(calc), math.sqrt(1 - calc))
+    result = c * EARTH_RADIUS   #  result in KM
+    return result
+   
+
+ 
+
+    """
+•	At any given moment, what are the estimated total global CO2 emissions of all of the scheduled live flights currently in the air? 
+o	Consider only those flights with specified departure and destination airports. 
+•	What are the estimated global CO2 emissions over the last five years (2017-2022)?
+o	What are the emissions for each year/month within that timeframe?
+•	What are the top twenty most polluting routes globally, regionally (USA, Europe) and by country. 
+o	Within each region and country, differentiate by domestic and international flights.
+•	What are the total CO2 emissions by each Airline?
+o	Within this, filter by routes and short-haul and long-haul.
+•	What are the estimated CO2 emissions by airport?
+o	Show a breakdown of both arrivals and departures and then short-haul and long-haul.
+•	Top twenty countries responsible for aviation CO2 emissions. Filter by:
+o	By domestic flights only.
+o	By international flights only.
+o	Combined CO2 emissions from domestic and international flights.
+o	By country of aircraft registration.
+•	Top twenty aircraft types responsible for the most CO2 emissions. 
+
+"""
