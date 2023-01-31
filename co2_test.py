@@ -10,19 +10,29 @@ idea: https://www.geodose.com/2020/08/create-flight-tracking-apps-using-python-o
 
 import requests
 import json
+import pprint
 
 params = {
   'api_key': API_KEY, # apikey
   'params1': 'value1' # value1
 }
 method = 'flights'
-array_view = '?_view=array&_fields=hex,flag,lat,lng,dir,alt'
+array_view = '?_view=array&_fields=hex,flag,lat,lng,dir,alt' # viable to change
 api_base = 'http://airlabs.co/api/v9/'
 api_result = requests.get(api_base+method+array_view, params) #timeout=0.5, stream=True
-api_response = api_result.json()
+# api_response = api_result.json()
+
+# some tester to parse the large quantities of data coming from the api
+api_response = json.loads(api_result.text)
+print(type(api_response))
+print(api_response[:20])
+
+num = 4
+sorted_list = [x for index, x in enumerate(api_response) if index < num] # fyi - this is a list comprehension 
+print(sorted_list[:1]) # returns first elem(list) within list
 
 
-print(json.dumps(api_response, indent=4, sort_keys=True ))
+# print(json.dumps(api_response, indent=4, sort_keys=True ))
 
 # limit = json.dumps(api_response, indent=4, sort_keys=True )
 
