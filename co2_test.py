@@ -13,19 +13,22 @@ import json
 
 params = {
   'api_key': API_KEY, # apikey
-  'params1': 'value1'
+  'params1': 'value1' # value1
 }
 method = 'flights'
+array_view = '?_view=array&_fields=hex,flag,lat,lng,dir,alt'
 api_base = 'http://airlabs.co/api/v9/'
-api_result = requests.get(api_base+method, params) #timeout=0.5, stream=True
+api_result = requests.get(api_base+method+array_view, params) #timeout=0.5, stream=True
 api_response = api_result.json()
 
 
-print(json.dumps(api_response, indent=4, sort_keys=True))
+print(json.dumps(api_response, indent=4, sort_keys=True ))
+
+# limit = json.dumps(api_response, indent=4, sort_keys=True )
+
 
 
 # define class
-# class Airplane:
     
 #     # python init/constructor with some basic params  
 #     def __init__(self, name, fleet_size, emission_levels):
