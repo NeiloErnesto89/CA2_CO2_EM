@@ -156,7 +156,10 @@ for i in countries_list:
         print(i['code'])
 
 for i in airports_list:
-    print (i)
+    try:
+        print (i['icao_code'])
+    except:
+        print("Error")
 
         
 # To Be Added Somewhere Later
