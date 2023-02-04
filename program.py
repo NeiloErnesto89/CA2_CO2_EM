@@ -1,13 +1,13 @@
-﻿import requests
+﻿from asyncio.windows_events import NULL
+import requests
+import math
 import json
 import pprint
-import math
 import time
 import datetime
 import os
 import sys
-
-aviation_api_key  = '87589d7335551dbbde5ccef4eb116749'
+import keys as keys
 
 
 class Emissions:
@@ -86,21 +86,42 @@ class Emissions:
    
 class ApiConnector:
     
-    def __init__(self):
-        self.api_key = {'access_key': '87589d7335551dbbde5ccef4eb116749'}
-        self.api_url = 'http://api.aviationstack.com/v1/flights'
+    def __init__(self, api_get, query_type='flight', detailed_query=NULL):
+        self.api_get = api_get;
+        self.query_type = query_type;
+        self.detailed_query = detailed_query
+        
+        if(api_get == 'airlabs'):
+            self.api_key = {'api_key': keys.AIRLABS_KEY}
+            self.api_url = 'http://airlabs.co/api/v9/' + query_type
+            # flight(default, airlines, airports, cities, fleets, routes, countries, timezones, taxes )
+            
+        elif(api_get == 'aviationstack'):
+            self.api_key = {'access_key': keys.AVIATION_KEY}
+            self.api_url = 'http://api.aviationstack.com/v1/' + query_type+'s'
+            # flights(default), routes, airports, airlines, airplanes, aircraft_types , taxes, cities, countries
+            
+        else:
+            print('Invalid api');
         
     def get_data_from_api(self):
-        # Get data from api
+
         api_result = requests.get(self.api_url, self.api_key)
-        return api_result 
+        api_response = api_result.json()
+        def write_to_file(self):
+            write_file = open(self.query_type + '.json', 'w')
+            write_file.write(json.dumps(api_response))
+            print(f'Data saved to {self.query_type} .json')   
+            write_file.close()
+          # Uncomment this line to save to file. 
+          # write_to_file(self) 
+        for i in api_response['response']:
+            print(i['code'])
     
-    def print_data_from_api(self):
-        api_result = self.get_data_from_api()
-        data = json.loads(api_result.text)
-        pprint.pprint(data)
-      #  api_response = api_result.json()
-       # print(json.dumps(api_response, indent=4, sort_keys=True))
+   # def print_data_from_api(self):
+   #     api_result = self.get_data_from_api()
+   #     api_response = api_result.json()
+   #     pprint.pprint(api_response)
         
     def print_api_key(self):
         # print api key
@@ -114,18 +135,23 @@ class ApiConnector:
             print('Server is running')
         else:
             print('Server is not running')
-        
 
         
-# ApiConnector(aviation_api_key).print_api_key()
-ApiConnector().print_data_from_api()
-ApiConnector().check_server_is_running()
+
+# Run this ONCE then comment back out
+"""
+flights_data = ApiConnector('airlabs', 'flights').get_data_from_api()
+ApiConnector('airlabs', 'airlines').get_data_from_api()
+ApiConnector('airlabs', 'airports').get_data_from_api()
+ApiConnector('airlabs', 'cities').get_data_from_api()
+ApiConnector('airlabs', 'fleets').get_data_from_api()
+ApiConnector('airlabs', 'routes').get_data_from_api()
+"""
+ApiConnector('airlabs', 'countries').get_data_from_api()
+
+             
+
         
-       
-
-
-
-
 # To Be Added Somewhere Later
 # Co2 Formula
 
@@ -216,5 +242,4 @@ o	By international flights only.
 o	Combined CO2 emissions from domestic and international flights.
 o	By country of aircraft registration.
 •	Top twenty aircraft types responsible for the most CO2 emissions. 
-
-"""
+ """ 

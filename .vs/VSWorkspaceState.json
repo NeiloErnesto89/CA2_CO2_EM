@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\__pycache__"
   ],
-  "SelectedNode": "\\program.py",
+  "SelectedNode": "\\__pycache__\\keys.cpython-39.pyc",
   "PreviewInSolutionExplorer": false
 }
