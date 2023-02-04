@@ -2,7 +2,7 @@
 import requests
 import math
 import json
-import pprint
+import pprint as pprint
 import time
 import datetime
 import os
@@ -108,15 +108,18 @@ class ApiConnector:
 
         api_result = requests.get(self.api_url, self.api_key)
         api_response = api_result.json()
+        
         def write_to_file(self):
             write_file = open(self.query_type + '.json', 'w')
             write_file.write(json.dumps(api_response))
             print(f'Data saved to {self.query_type} .json')   
             write_file.close()
-          # Uncomment this line to save to file. 
+            
+          # Uncomment this 2 lines to save to file. 
           # write_to_file(self) 
-        for i in api_response['response']:
-            print(i['code'])
+        return api_response['response']
+          #  print(i['name'] + " " + i['code'])
+          #  print(i['code'])
     
    # def print_data_from_api(self):
    #     api_result = self.get_data_from_api()
@@ -137,19 +140,23 @@ class ApiConnector:
             print('Server is not running')
 
         
+            
 
-# Run this ONCE then comment back out
-"""
-flights_data = ApiConnector('airlabs', 'flights').get_data_from_api()
-ApiConnector('airlabs', 'airlines').get_data_from_api()
-ApiConnector('airlabs', 'airports').get_data_from_api()
-ApiConnector('airlabs', 'cities').get_data_from_api()
-ApiConnector('airlabs', 'fleets').get_data_from_api()
-ApiConnector('airlabs', 'routes').get_data_from_api()
-"""
-ApiConnector('airlabs', 'countries').get_data_from_api()
 
-             
+countries_list = ApiConnector('airlabs', 'countries').get_data_from_api()
+airports_list = ApiConnector('airlabs', 'airports').get_data_from_api()
+cities_list = ApiConnector('airlabs', 'cities').get_data_from_api()
+fleets_list = ApiConnector('airlabs', 'fleets').get_data_from_api()
+airlines_list = ApiConnector('airlabs', 'airlines').get_data_from_api()
+timezones_list = ApiConnector('airlabs', 'airlines').get_data_from_api()
+taxes_list = ApiConnector('airlabs', 'taxes').get_data_from_api()
+
+for i in countries_list:
+    if i['name'] == "Yemen":
+        print(i['code'])
+
+for i in airports_list:
+    print (i)
 
         
 # To Be Added Somewhere Later
@@ -243,3 +250,4 @@ o	Combined CO2 emissions from domestic and international flights.
 o	By country of aircraft registration.
 •	Top twenty aircraft types responsible for the most CO2 emissions. 
  """ 
+
