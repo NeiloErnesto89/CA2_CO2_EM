@@ -142,7 +142,7 @@ class ApiConnector:
         
             
 
-
+flights_list = ApiConnector('airlabs', 'flights').get_data_from_api()
 countries_list = ApiConnector('airlabs', 'countries').get_data_from_api()
 airports_list = ApiConnector('airlabs', 'airports').get_data_from_api()
 cities_list = ApiConnector('airlabs', 'cities').get_data_from_api()
@@ -159,7 +159,15 @@ for i in airports_list:
     try:
         print (i['icao_code'])
     except:
-        print("Error")
+       pass
+   
+for i in flights_list:
+    for j in airports_list:
+        try:
+            if(i['dep_icao'] == j['icao_code']):
+                print(j['lat'], j['lng'])
+        except:
+            pass
 
         
 # To Be Added Somewhere Later
