@@ -1,5 +1,4 @@
-﻿from asyncio.windows_events import NULL
-import requests
+﻿import requests
 import math
 import json
 import pprint as pprint
@@ -150,7 +149,7 @@ class ApiResponse:
    
 class ApiConnector:
     
-    def __init__(self, api_get, query_type='flight', detailed_query=NULL):
+    def __init__(self, api_get, query_type='flight', detailed_query=None):
         self.api_get = api_get;
         self.query_type = query_type;
         self.detailed_query = detailed_query
@@ -177,10 +176,9 @@ class ApiConnector:
             write_file = open(self.query_type + '.json', 'w')
             write_file.write(json.dumps(api_response['response']))
             print(f'Data saved to {self.query_type} .json')   
-            write_file.close()
-            
-          # Uncomment this 2 lines to save to file. 
-          #  write_to_file(self) 
+            write_file.close()   
+            # Uncomment this 2 lines to save to file. 
+            # write_to_file(self) 
         return api_response['response']
 
     
