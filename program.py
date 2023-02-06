@@ -18,12 +18,11 @@ def is_long_haul(flight_distance):
         return True 
 
 class Emissions:
-    
-    def __init__(self, flight_distance):
-        self.flight_distance = flight_distance
         
+      
     def calculate_co2_emissions(flight_distance):
 
+        
     # The following formula is used to calculate the total CO2-equivalent emissions:
     # 𝑬 = ()𝒂𝒙 𝟐 +𝒃𝒙 +𝒄 / 𝑺 ∗ 𝑷𝑳𝑭) ∗ (𝟏 −𝑪𝑭) ∗ 𝑪𝑾 ∗ (𝑬𝑭 ∗ 𝑴 + 𝑷)+ 𝐀𝐅 ∗ 𝐱 + �
     # s = number_of_seats # Shorthaul -> 153.51 , Longhaul -> 280.21
@@ -62,6 +61,7 @@ class Emissions:
     def calculate_distance(self, departure_lat_lng, arrival_lat_lng):
         # Calculate distance
         distance = hs.haversine(departure_lat_lng, arrival_lat_lng)
+        print(f'Total distance is {round(distance, 2)} kilometeres, but full distance is {distance}')
         return distance
 
 """   
@@ -127,6 +127,16 @@ class ApiResponse:
                         print(j['lat'], j['lng'])
                 except:
                     pass
+                
+    def get_airport_cordinates(self, airport_name):
+        for i in self.airports_list:
+            try:
+                if(i['icao_code'] == airport_name):               
+                    return i['lat'], i['lng']
+            except:
+                pass
+
+            
 """ To Be Continued
     def get_departure_lat_lng(self, departure_airport):
         # Get departure lat and lng from airports api
@@ -208,7 +218,12 @@ if __name__ == "__main__":
 
     #Print Flight Flag
     ApiResponse().get_all_flights_country()
-
+    #Print Airport Coordinates
+    print(ApiResponse().get_airport_cordinates('EDDL'));
+    print(ApiResponse().get_airport_cordinates('EDDF'));
+    #Calculate distanse
+    Emissions().calculate_distance(ApiResponse().get_airport_cordinates('EDDL'),  ApiResponse().get_airport_cordinates('EDDF'))
+    
 
         
 
