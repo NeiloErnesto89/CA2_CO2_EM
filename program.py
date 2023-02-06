@@ -152,14 +152,15 @@ class ApiResponse:
 
     def list_all_flights(self):
         for i in self.flights_list:
-            try:
-                print(i['hex'])
-                print("going from")
-                print(i['dep_icao'])
-                print("to")
-                print(i['arr_icao'])
-            except:
-                pass
+            if(i.get('dep_icao') and i.get('arr_icao')):
+                try:
+                    print(i['hex'])
+                    print("going from")
+                    print(i['dep_icao'])
+                    print("to")
+                    print(i['arr_icao'])
+                except:
+                    pass
 
             
 """ To Be Continued
