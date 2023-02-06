@@ -121,12 +121,14 @@ class ApiResponse:
     def get_all_departure_airport(self):
         print("Departure Lang Lat")
         for i in self.flights_list:
-            for j in self.airports_list:
-                try:
-                    if(i['dep_icao'] == j['icao_code']):
-                        print(j['lat'], j['lng'])
-                except:
-                    pass
+            if(i.get('dep_icao') and i.get('arr_icao')):
+                for j in self.airports_list: 
+                        try:
+                            if(i['dep_icao'] == j['icao_code']):
+                                print(j['lat'], j['lng'])
+                                break;
+                        except:
+                            pass
                 
     def get_airport_cordinates(self, airport_name):
         for i in self.airports_list:
@@ -153,16 +155,19 @@ class ApiResponse:
     def list_all_flights(self):
         for i in self.flights_list:
             if(i.get('dep_icao') and i.get('arr_icao')):
-                print("Flight Number is", end= " ")
-                print(i['flight_number'], end=" ")
-                print("and the airline is", end=" ")
-                print(i['flag'], end=" ")
-                print("and the aircraft is", end=" ")
-                print(i['aircraft_icao'], end=" ")
-                print("going from", end = " ")
-                print(i['dep_icao'], end = " ")
-                print("to", end = ' ')
-                print(i['arr_icao'])
+                try:
+                    print("Flight Number is", end= " ")
+                    print(i['flight_number'], end=" ")
+                    print("and the airline is", end=" ")
+                    print(i['flag'], end=" ")
+                    print("and the aircraft is", end=" ")
+                    print(i['aircraft_icao'], end=" ")
+                    print("going from", end = " ")
+                    print(i['dep_icao'], end = " ")
+                    print("to", end = ' ')
+                    print(i['arr_icao'])
+                except:
+                    pass
 
             
 """ To Be Continued
@@ -255,6 +260,7 @@ if __name__ == "__main__":
     print(str(Emissions().calculate_co2_emissions(result)) + " co2 emissions for that flight bitch !");
     
     ApiResponse().list_all_flights();
+    print(ApiResponse().get_all_departure_airport());
         
 
 """
