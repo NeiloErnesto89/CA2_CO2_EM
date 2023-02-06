@@ -154,10 +154,11 @@ class ApiResponse:
         for i in self.flights_list:
             if(i.get('dep_icao') and i.get('arr_icao')):
                 try:
-                    print(i['hex'])
-                    print("going from")
-                    print(i['dep_icao'])
-                    print("to")
+                    print(i['hex'], end=" ")
+                    print(i['flag'], end=" ")
+                    print("going from", end = " ")
+                    print(i['dep_icao'], end = " ")
+                    print("to", end = ' ')
                     print(i['arr_icao'])
                 except:
                     pass
@@ -243,13 +244,14 @@ if __name__ == "__main__":
  
 
     #Print Flight Flag
-    ApiResponse().get_all_flights_country()
+    #ApiResponse().get_all_flights_country()
+    
     #Print Airport Coordinates
     print(ApiResponse().get_airport_cordinates('EDDL'));
     print(ApiResponse().get_airport_cordinates('EDDF'));
     #Calculate distanse
     result =  Emissions().calculate_distance(ApiResponse().get_airport_cordinates('EDDL'),  ApiResponse().get_airport_cordinates('EDDF'))
-    print(Emissions().calculate_co2_emissions(result));
+    print(str(Emissions().calculate_co2_emissions(result)) + " co2 emissions for that flight bitch !");
     
     ApiResponse().list_all_flights();
         
