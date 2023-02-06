@@ -20,7 +20,7 @@ def is_long_haul(flight_distance):
 class Emissions:
         
       
-    def calculate_co2_emissions(flight_distance):
+    def calculate_co2_emissions(self, flight_distance):
 
         
     # The following formula is used to calculate the total CO2-equivalent emissions:
@@ -136,6 +136,31 @@ class ApiResponse:
             except:
                 pass
 
+    def list_all_airlines(self):
+        for i in self.airlines_list:
+            try:
+                print(i['name'])
+            except:
+                pass
+            
+    def list_all_airports(self):
+        for i in self.airports_list:
+            try:
+                print(i['name'])
+            except:
+                pass
+
+    def list_all_flights(self):
+        for i in self.flights_list:
+            try:
+                print(i['hex'])
+                print("going from")
+                print(i['dep_icao'])
+                print("to")
+                print(i['arr_icao'])
+            except:
+                pass
+
             
 """ To Be Continued
     def get_departure_lat_lng(self, departure_airport):
@@ -187,8 +212,8 @@ class ApiConnector:
             write_file.write(json.dumps(api_response['response']))
             print(f'Data saved to {self.query_type} .json')   
             write_file.close()   
-            # Uncomment this 2 lines to save to file. 
-            # write_to_file(self) 
+           #Uncomment this 2 lines to save to file. 
+           #write_to_file(self) 
         return api_response['response']
 
     
@@ -222,9 +247,10 @@ if __name__ == "__main__":
     print(ApiResponse().get_airport_cordinates('EDDL'));
     print(ApiResponse().get_airport_cordinates('EDDF'));
     #Calculate distanse
-    Emissions().calculate_distance(ApiResponse().get_airport_cordinates('EDDL'),  ApiResponse().get_airport_cordinates('EDDF'))
+    result =  Emissions().calculate_distance(ApiResponse().get_airport_cordinates('EDDL'),  ApiResponse().get_airport_cordinates('EDDF'))
+    print(Emissions().calculate_co2_emissions(result));
     
-
+    ApiResponse().list_all_flights();
         
 
 """
