@@ -1,20 +1,20 @@
 import math #Math library for calculations incl. Pi, sqrt etc
-#import requests
+import requests
 
 # The URL for the API endpoint
-#url = ""
+url = ""
 
 # Make the API request
-#response = requests.get(url)
+response = requests.get(url)
 
 # Check if the API request was successful
-#if response.status_code == 200:
+if response.status_code == 200:
     # Process the API response data
-    #data = response.json()
+    data = response.json()
    
-#else:
+else:
     # Handle the error
-    #print("Request failed with status code:", response.status_code)
+    print("Request failed with status code:", response.status_code)
 
 def distance(startlat, startlong, destlat, destlong):
     
