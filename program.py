@@ -1,4 +1,10 @@
-﻿import requests
+﻿"""
+    This is the main file of the program. It contains the main function and the author which is
+    bloobsky
+"""
+
+
+import requests
 import math
 import json
 import pprint as pprint
@@ -61,8 +67,8 @@ class Emissions:
     def calculate_distance(self, departure_lat_lng, arrival_lat_lng):
         # Calculate distance
         distance = hs.haversine(departure_lat_lng, arrival_lat_lng)
-        print(f'Total distance is {round(distance, 2)} kilometeres, but full distance is {distance}')
-        return distance
+      #  print(f'Total distance is {round(distance, 2)} kilometeres, but full distance is {distance}')
+        return round(distance, 2)
 
 """   
 Not gonna be used but shows the calculations. 
@@ -91,9 +97,9 @@ class ApiResponse:
     
 
     def __init__(self):
-        self.flights_list = ApiConnector('airlabs', 'flights').get_data_from_api()
+        self.flights_list = ApiConnector('airlabs', 'flights', 'dep_icao,arr_icao,flight_number,flag,aircraft_icao').get_data_from_api()
         self.countries_list = ApiConnector('airlabs', 'countries').get_data_from_api()
-        self.airports_list = ApiConnector('airlabs', 'airports').get_data_from_api()
+        self.airports_list = ApiConnector('airlabs', 'airports', 'icao_code,name,lat,lng').get_data_from_api()
         self.cities_list = ApiConnector('airlabs', 'cities')
         self.fleets_list = ApiConnector('airlabs', 'fleets')
         self.airlines_list = ApiConnector('airlabs', 'airlines')
@@ -156,16 +162,9 @@ class ApiResponse:
         for i in self.flights_list:
             if(i.get('dep_icao') and i.get('arr_icao')):
                 try:
-                    print("Flight Number is", end= " ")
-                    print(i['flight_number'], end=" ")
-                    print("and the airline is", end=" ")
-                    print(i['flag'], end=" ")
-                    print("and the aircraft is", end=" ")
-                    print(i['aircraft_icao'], end=" ")
-                    print("going from", end = " ")
-                    print(i['dep_icao'], end = " ")
-                    print("to", end = ' ')
-                    print(i['arr_icao'])
+                    print(f"Flight Number is {i['flight_number']} and the airline is {i['flag']} and the aircraft is {i['aircraft_icao']} going from {i['dep_icao']} to {i['arr_icao']}");
+                    print(f'Flight distance is {Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"]))} km');
+                    print(f'Flight CO2 emissions is {Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"])))} kg');
                 except:
                     pass
 
@@ -194,12 +193,15 @@ class ApiConnector:
     
     def __init__(self, api_get, query_type='flight', detailed_query=None):
         self.api_get = api_get;
-        self.query_type = query_type;
+        self.query_type = query_type
         self.detailed_query = detailed_query
         
         if(api_get == 'airlabs'):
             self.api_key = {'api_key': keys.AIRLABS_KEY}
             self.api_url = 'http://airlabs.co/api/v9/' + query_type
+            
+           # if(self.detailed_query != None):
+            #    self.api_key['_fields'] = detailed_query
             # flight(default, airlines, airports, cities, fleets, routes, countries, timezones, taxes )
             
         elif(api_get == 'aviationstack'):
@@ -208,12 +210,19 @@ class ApiConnector:
             # flights(default), routes, airports, airlines, airplanes, aircraft_types , taxes, cities, countries
             
         else:
-            print('Invalid api');
+            print('Invalid api')
         
+                
     def get_data_from_api(self):
+        params = {'api_key':  keys.AIRLABS_KEY }
+        params["_fields"]= self.detailed_query
+            
+            # flight(default, airlines, airports, cities, fleets, routes, countries, timezones, taxes )
 
-        api_result = requests.get(self.api_url, self.api_key)
+       
+        api_result = requests.get(self.api_url, params)
         api_response = api_result.json()
+
         
         def write_to_file(self):
             write_file = open(self.query_type + '.json', 'w')
@@ -222,6 +231,7 @@ class ApiConnector:
             write_file.close()   
            #Uncomment this 2 lines to save to file. 
            #write_to_file(self) 
+            
         return api_response['response']
 
     
@@ -244,36 +254,41 @@ class ApiConnector:
             print('Server is not running')
 
         
-
+            
 # Program starts here
 if __name__ == "__main__":
  
-
+    
+  #  Flights = ApiConnector('airlabs', 'flights',).get_data_from_api()
+   # print(Flights)
+    
     #Print Flight Flag
-    #ApiResponse().get_all_flights_country()
+   # ApiResponse().get_all_flights_country()
     
     #Print Airport Coordinates
-    print(ApiResponse().get_airport_cordinates('EDDL'));
-    print(ApiResponse().get_airport_cordinates('EDDF'));
+   # print(ApiResponse().get_airport_cordinates('EDDL'));
+   # print(ApiResponse().get_airport_cordinates('EDDF'));
     #Calculate distanse
-    result =  Emissions().calculate_distance(ApiResponse().get_airport_cordinates('EDDL'),  ApiResponse().get_airport_cordinates('EDDF'))
-    print(str(Emissions().calculate_co2_emissions(result)) + " co2 emissions for that flight bitch !");
+   # result =  Emissions().calculate_distance(ApiResponse().get_airport_cordinates('EDDL'),  ApiResponse().get_airport_cordinates('EDDF'))
+   # print(str(Emissions().calculate_co2_emissions(result)) + " co2 emissions for that flight !");
     
     ApiResponse().list_all_flights();
-    print(ApiResponse().get_all_departure_airport());
+   # print(ApiResponse().get_all_departure_airport());
         
 
 """
+
 •	At any given moment, what are the estimated total global CO2 emissions of all of the scheduled live flights currently in the air? 
-o	Consider only those flights with specified departure and destination airports. 
-•	What are the estimated global CO2 emissions over the last five years (2017-2022)?
-o	What are the emissions for each year/month within that timeframe?
-•	What are the top twenty most polluting routes globally, regionally (USA, Europe) and by country. 
-o	Within each region and country, differentiate by domestic and international flights.
-•	What are the total CO2 emissions by each Airline?
-o	Within this, filter by routes and short-haul and long-haul.
-•	What are the estimated CO2 emissions by airport?
-o	Show a breakdown of both arrivals and departures and then short-haul and long-haul.
+o	Consider only those flights with specified departure and destination airports.   ** done
+•	What are the estimated global CO2 emissions over the last five years (2017-2022)? -- let's ask Shane
+o	What are the emissions for each year/month within that timeframe? -- We can do each day, then multiplying value for estimated emissions 
+•	What are the top twenty most polluting routes globally, regionally (USA, Europe) and by country. --> Not even started possible solution
+o	Within each region and country, differentiate by domestic and international flights.  --> so compare country_code from airport databases 
+•	What are the total CO2 emissions by each Airline? --> "flag": "US", no problem with 
+o	Within this, filter by routes and short-haul and long-haul. --> function ready !!
+•	What are the estimated CO2 emissions by airport? --> dep_icao(out of flights) == icao_code (out of airport)
+o	Show a breakdown of both arrivals and departures and then short-haul and long-haul. ()
+•	What are the top twenty countries responsible for aviation CO2 emissions. --> "country_code": "US", no problem with
 •	Top twenty countries responsible for aviation CO2 emissions. Filter by:
 o	By domestic flights only.
 o	By international flights only.
