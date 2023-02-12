@@ -3,7 +3,6 @@
     bloobsky
 """
 
-
 import requests
 import math
 import json
@@ -101,7 +100,7 @@ class ApiResponse:
 
     def __init__(self):
         self.flights_list = ApiConnector('airlabs', 'flights', 'dep_icao,arr_icao,flight_number,flag,aircraft_icao')
-        self.countries_list = ApiConnector('airlabs', 'countries').get_data_from_api()
+        self.countries_list = ApiConnector('airlabs', 'countries')
         self.airports_list = ApiConnector('airlabs', 'airports', 'icao_code,lat,lng')
         self.cities_list = ApiConnector('airlabs', 'cities')
         self.fleets_list = ApiConnector('airlabs', 'fleets')
@@ -162,14 +161,14 @@ class ApiResponse:
         total_result = 0
         for i in self.flights_list.read_data_file():
             if(i.get('dep_icao') and i.get('arr_icao')):
-                print(f"Flight Number is {i['flight_number']} and the airline is {i['flag']} and the aircraft is {i['aircraft_icao']} going from {i['dep_icao']} to {i['arr_icao']}");
-                print(f'Flight distance is {Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"]))} km');
+               # print(f"Flight Number is {i['flight_number']} and the airline is {i['flag']} and the aircraft is {i['aircraft_icao']} going from {i['dep_icao']} to {i['arr_icao']}");
+               # print(f'Flight distance is {Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"]))} km');
                 result = Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
                 #print(f'Flight CO2 emissions is {Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"])))} kg');
-                print(f'{result} kg ')
+              #  print(f'{result} kg CO2 emitted into the atmosphere.')
                 total_result = total_result + result
-                print(f'Total consumption so far is {total_result} kg ')
-
+                print(f'Total consumption so far is {round(total_result, 2)} kg ')
+                
             else:
                 print("Error")
 
