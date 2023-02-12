@@ -41,18 +41,10 @@ Built in Python using the Flask/Django framework etc.
 
 Here's how are App looks ..
 
-## **Djano/Flask**
+## **Django Settings**
 
-Add code snippet here:
-
-1. Create a `custom_storages.py` with 2 classes for both Static and Media (files) locations. Underneath is the code snippet:
-
-    ```python
-    import django
-    print(django.get_version())
-    # 4.1
-
-    def foo(noo):
-        return noo**noo
-
-    ```
+- Admin Portal Credentials
+```
+user: admin
+pass: CA2123!
+```
