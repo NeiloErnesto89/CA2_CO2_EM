@@ -115,6 +115,11 @@ class ApiResponse:
                 print(i['flag'])
             except:
                 pass
+            
+    def get_airport_name(self, airport_code):
+        for i in self.airports_list.read_data_file():
+            if (i.get('icao_code') == airport_code):
+                return i['name']
 
     def get_all_arrival_airport(self):
         print("Arrival Lang Lat")
@@ -166,13 +171,20 @@ class ApiResponse:
                 result = Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
                 #print(f'Flight CO2 emissions is {Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"])))} kg');
               #  print(f'{result} kg CO2 emitted into the atmosphere.')
-                total_result = total_result + result
+                total_result += result
                 print(f'Total consumption so far is {round(total_result, 2)} kg ')
                 
             else:
                 print("Error")
 
-            
+
+    def list_flights_with_departure_airport(self, airport_icao):
+        total_result = 0
+        for i in self.flights_list.read_data_file():
+            if(i.get('dep_icao') == airport_icao):
+                result = Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
+                total_result += result
+                print(f'Total consumption from {ApiResponse().get_airport_name(airport_icao)} so far is {round(total_result, 2)} kg ')
 """ To Be Continued
     def get_departure_lat_lng(self, departure_airport):
         # Get departure lat and lng from airports api
@@ -278,8 +290,12 @@ if __name__ == "__main__":
    # print(str(Emissions().calculate_co2_emissions(result)) + " co2 emissions for that flight !");
     ApiConnector('airlabs', 'flights', 'dep_icao,arr_icao,flight_number,flag,aircraft_icao').write_to_file()
     ApiConnector('airlabs', 'airports').write_to_file()
-    ApiResponse().list_all_flights();
+    # All Flights
+   # ApiResponse().list_all_flights();
    # print(ApiResponse().get_all_departure_airport());
+
+   # Get Emissions by Airport
+    print(ApiResponse().list_flights_with_departure_airport('EDDL'))
         
 
 """
