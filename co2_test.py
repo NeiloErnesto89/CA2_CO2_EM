@@ -14,13 +14,14 @@ import pprint
 
 params = {
   'api_key': API_KEY, # apikey
-  'params1': 'value1' # value1
+  #'params1': 'value1' # value1
 }
 method = 'flights'
 array_view = '?_view=array&_fields=hex,flag,lat,lng,dir,alt' # viable to change
 api_base = 'http://airlabs.co/api/v9/'
 api_result = requests.get(api_base+method+array_view, params) #timeout=0.5, stream=True
 # api_response = api_result.json()
+print(params)
 
 # some tester to parse the large quantities of data coming from the api
 api_response = json.loads(api_result.text)
