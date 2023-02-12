@@ -14,6 +14,7 @@ import os
 import sys
 import haversine as hs
 import keys as keys
+import numpy as np
 
 
 def is_long_haul(flight_distance):
@@ -61,7 +62,9 @@ class Emissions:
 
 
        function_result = (a_func*x**2) + (b_func*x) + c_func # quadratic equations result
-       return  function_result / (s * plf)  * (1 - cf) * cw * (ef * m + p) + (af * x) + afm
+       rest_equation = (s * plf)  * (1 - cf) * cw * (ef * m + p) + (af * x) + afm
+       result = function_result / rest_equation
+       return round(result, 2)
 
        
     def calculate_distance(self, departure_lat_lng, arrival_lat_lng):
@@ -97,9 +100,9 @@ class ApiResponse:
     
 
     def __init__(self):
-        self.flights_list = ApiConnector('airlabs', 'flights', 'dep_icao,arr_icao,flight_number,flag,aircraft_icao').get_data_from_api()
+        self.flights_list = ApiConnector('airlabs', 'flights', 'dep_icao,arr_icao,flight_number,flag,aircraft_icao')
         self.countries_list = ApiConnector('airlabs', 'countries').get_data_from_api()
-        self.airports_list = ApiConnector('airlabs', 'airports', 'icao_code,name,lat,lng').get_data_from_api()
+        self.airports_list = ApiConnector('airlabs', 'airports', 'icao_code,lat,lng')
         self.cities_list = ApiConnector('airlabs', 'cities')
         self.fleets_list = ApiConnector('airlabs', 'fleets')
         self.airlines_list = ApiConnector('airlabs', 'airlines')
@@ -137,12 +140,9 @@ class ApiResponse:
                             pass
                 
     def get_airport_cordinates(self, airport_name):
-        for i in self.airports_list:
-            try:
-                if(i['icao_code'] == airport_name):               
-                    return i['lat'], i['lng']
-            except:
-                pass
+        for i in self.airports_list.read_data_file():
+            if(i.get('icao_code') == airport_name):               
+                return i['lat'], i['lng']
 
     def list_all_airlines(self):
         for i in self.airlines_list:
@@ -157,16 +157,21 @@ class ApiResponse:
                 print(i['name'])
             except:
                 pass
-
+            
     def list_all_flights(self):
-        for i in self.flights_list:
+        total_result = 0
+        for i in self.flights_list.read_data_file():
             if(i.get('dep_icao') and i.get('arr_icao')):
-                try:
-                    print(f"Flight Number is {i['flight_number']} and the airline is {i['flag']} and the aircraft is {i['aircraft_icao']} going from {i['dep_icao']} to {i['arr_icao']}");
-                    print(f'Flight distance is {Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"]))} km');
-                    print(f'Flight CO2 emissions is {Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"])))} kg');
-                except:
-                    pass
+                print(f"Flight Number is {i['flight_number']} and the airline is {i['flag']} and the aircraft is {i['aircraft_icao']} going from {i['dep_icao']} to {i['arr_icao']}");
+                print(f'Flight distance is {Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"]))} km');
+                result = Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
+                #print(f'Flight CO2 emissions is {Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"])))} kg');
+                print(f'{result} kg ')
+                total_result = total_result + result
+                print(f'Total consumption so far is {total_result} kg ')
+
+            else:
+                print("Error")
 
             
 """ To Be Continued
@@ -216,24 +221,25 @@ class ApiConnector:
     def get_data_from_api(self):
         params = {'api_key':  keys.AIRLABS_KEY }
         params["_fields"]= self.detailed_query
-            
-            # flight(default, airlines, airports, cities, fleets, routes, countries, timezones, taxes )
-
-       
         api_result = requests.get(self.api_url, params)
         api_response = api_result.json()
-
-        
-        def write_to_file(self):
-            write_file = open(self.query_type + '.json', 'w')
-            write_file.write(json.dumps(api_response['response']))
-            print(f'Data saved to {self.query_type} .json')   
-            write_file.close()   
-           #Uncomment this 2 lines to save to file. 
-           #write_to_file(self) 
             
         return api_response['response']
 
+    def write_to_file(self):
+        params = {'api_key':  keys.AIRLABS_KEY }
+        params["_fields"]= self.detailed_query
+        api_result = requests.get(self.api_url, params)
+        api_response = api_result.json()
+        
+        with open(self.query_type + '.json', 'w') as write_file:
+            write_file.write(json.dumps(api_response['response']))
+        print(f'Data saved to {self.query_type} .json')   
+
+    def read_data_file(self):
+        with open(self.query_type + '.json', 'r') as read_file:
+            data = np.array(json.load(read_file))
+            return data
     
     def print_data_from_api(self):
         api_result = self.get_data_from_api()
@@ -271,7 +277,8 @@ if __name__ == "__main__":
     #Calculate distanse
    # result =  Emissions().calculate_distance(ApiResponse().get_airport_cordinates('EDDL'),  ApiResponse().get_airport_cordinates('EDDF'))
    # print(str(Emissions().calculate_co2_emissions(result)) + " co2 emissions for that flight !");
-    
+    ApiConnector('airlabs', 'flights', 'dep_icao,arr_icao,flight_number,flag,aircraft_icao').write_to_file()
+    ApiConnector('airlabs', 'airports').write_to_file()
     ApiResponse().list_all_flights();
    # print(ApiResponse().get_all_departure_airport());
         
