@@ -41,10 +41,32 @@ Built in Python using the Flask/Django framework etc.
 
 Here's how are App looks ..
 
-## **Django Settings**
+
+## Deployment
+1. In your virtual environment, install all requirements:
+    ~~~bash
+    pip install -r requirements.txt
+    ~~~
+2. Migrate the database
+    ~~~bash
+    python manage.py migrate
+    ~~~
+3. Create a Super User
+    ~~~bash
+    python manage.py createsuperuser
+    ~~~
+
+
+### Debug Run
+```bash
+python manage.py runserver
+```
+
+### Settings
 
 - Admin Portal Credentials
-```
-user: admin
-pass: CA2123!
-```
+    ```
+    user: admin
+    pass: CA2123!
+    ```
+
