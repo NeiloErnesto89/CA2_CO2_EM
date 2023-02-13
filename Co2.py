@@ -1,6 +1,5 @@
 import math #Math library for calculations incl. Pi, sqrt etc
 import requests
-import requests
 import json
 
 #API request
