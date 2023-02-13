@@ -4,13 +4,8 @@
 """
 
 import requests
-import math
 import json
 import pprint as pprint
-import time
-import datetime
-import os
-import sys
 import haversine as hs
 import keys as keys
 import numpy as np
@@ -31,6 +26,24 @@ class Emissions:
         
     # The following formula is used to calculate the total CO2-equivalent emissions:
     # 𝑬 = ()𝒂𝒙 𝟐 +𝒃𝒙 +𝒄 / 𝑺 ∗ 𝑷𝑳𝑭) ∗ (𝟏 −𝑪𝑭) ∗ 𝑪𝑾 ∗ (𝑬𝑭 ∗ 𝑴 + 𝑷)+ 𝐀𝐅 ∗ 𝐱 + �
+   #E: CO2-eq emissions per passenger [kg]
+   #x: Flight Distance [km] which is defined as the sum of GCD, the great circle distance, and DC, a distance
+   #correction for detours and holding patterns, and inefficiencies in the air traffic control systems [km]
+   #S: Average number of seats (total across all cabin classes)
+   #PLF: Passenger load factor
+   #CF: Cargo factor
+   #CW: Cabin class weighting factor
+   #EF: CO2 emission factor for jet fuel combustion (kerosene)
+   #M: Multiplier accounting for potential non-CO2 effects
+   #P: CO2e emission factor for preproduction jet fuel, kerosene
+   #AF: Aircraft factor
+   #A: Airport infrastructure emissions
+   #The part ax
+   #2 + bx + c is a nonlinear approximation of f(x) + LTO
+   #LTO: Fuel consumption during landing and takeoff cycle including taxi [kg]
+
+
+
     # s = number_of_seats # Shorthaul -> 153.51 , Longhaul -> 280.21
     # plf = passenger_load_factor # Shorthaul -> 0.82 ,  Longhaul -> 0.82 
     # cf = cargo_factor # Shorthaul -> 0.93 ,  Longhaul -> 0.74 
@@ -71,6 +84,13 @@ class Emissions:
         distance = hs.haversine(departure_lat_lng, arrival_lat_lng)
       #  print(f'Total distance is {round(distance, 2)} kilometeres, but full distance is {distance}')
         return round(distance, 2)
+
+    def is_distance_long_or_short(self, distance):
+        if(distance > 1500):
+            print(f'That was a long-haul flight.')
+        else:
+            print(f'That was a short-haul flight.')
+
 
 """   
 Not gonna be used but shows the calculations. 
@@ -156,35 +176,48 @@ class ApiResponse:
                 pass
             
     def list_all_airports(self):
-        for i in self.airports_list:
-            try:
-                print(i['name'])
-            except:
-                pass
+        for i in self.airports_list.read_data_file():
+            if(i.get('icao_code') and i.get('name')):
+                print(f'Airport name is {i["name"]} and the airport code is {i["icao_code"]} ')
+
             
     def list_all_flights(self):
-        total_result = 0
+        total_result = 0 
         for i in self.flights_list.read_data_file():
             if(i.get('dep_icao') and i.get('arr_icao')):
-               # print(f"Flight Number is {i['flight_number']} and the airline is {i['flag']} and the aircraft is {i['aircraft_icao']} going from {i['dep_icao']} to {i['arr_icao']}");
-               # print(f'Flight distance is {Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"]))} km');
+                # print(f"Flight Number is {i['flight_number']} and the airline is {i['flag']} and the aircraft is {i['aircraft_icao']} going from {i['dep_icao']} to {i['arr_icao']}");
+                print(f'Flight distance is {Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"]))} km');
                 result = Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
                 #print(f'Flight CO2 emissions is {Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"])))} kg');
               #  print(f'{result} kg CO2 emitted into the atmosphere.')
                 total_result += result
-                print(f'Total consumption so far is {round(total_result, 2)} kg ')
-                
+                print(f'Total consumption so far is {round(total_result, 2)} KG  per passenger  ')
             else:
                 print("Error")
 
 
     def list_flights_with_departure_airport(self, airport_icao):
         total_result = 0
-        for i in self.flights_list.read_data_file():
+        for i in self.flights_list.get_data_from_api():
             if(i.get('dep_icao') == airport_icao):
+                filter_long_short_haul = Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao']))
+                print(Emissions().is_distance_long_or_short(filter_long_short_haul))
                 result = Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
                 total_result += result
                 print(f'Total consumption from {ApiResponse().get_airport_name(airport_icao)} so far is {round(total_result, 2)} kg ')
+
+
+    def list_flights_with_arrival_airport(self, airport_icao):
+        total_result = 0
+        for i in self.flights_list.read_data_file():
+            if(i.get('arr_icao') == airport_icao):
+                filter_long_short_haul = Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao']))
+                print(Emissions().is_distance_long_or_short(filter_long_short_haul))
+                result = Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
+                total_result += result
+                print(f'Total consumption from {ApiResponse().get_airport_name(airport_icao)} so far is {round(total_result, 2)} kg ')
+                
+                
 """ To Be Continued
     def get_departure_lat_lng(self, departure_airport):
         # Get departure lat and lng from airports api
@@ -243,7 +276,7 @@ class ApiConnector:
         api_result = requests.get(self.api_url, params)
         api_response = api_result.json()
         
-        with open(self.query_type + '.json', 'w') as write_file:
+        with open(self.query_type + '.json', 'w') as write_file: 
             write_file.write(json.dumps(api_response['response']))
         print(f'Data saved to {self.query_type} .json')   
 
@@ -289,28 +322,33 @@ if __name__ == "__main__":
    # result =  Emissions().calculate_distance(ApiResponse().get_airport_cordinates('EDDL'),  ApiResponse().get_airport_cordinates('EDDF'))
    # print(str(Emissions().calculate_co2_emissions(result)) + " co2 emissions for that flight !");
     ApiConnector('airlabs', 'flights', 'dep_icao,arr_icao,flight_number,flag,aircraft_icao').write_to_file()
-    ApiConnector('airlabs', 'airports').write_to_file()
-    # All Flights
-   # ApiResponse().list_all_flights();
+    ApiConnector('airlabs', 'flights').get_data_from_api()
+    # All Flights - q1 --add en-route for flights live. 
+    #ApiResponse().list_all_flights();
    # print(ApiResponse().get_all_departure_airport());
 
    # Get Emissions by Airport
+
     print(ApiResponse().list_flights_with_departure_airport('EDDL'))
+    print(ApiResponse().list_flights_with_departure_airport('EDDF'))
+    
+    # List all airports
+    #print(ApiResponse().list_all_airports())
         
 
 """
 
-•	At any given moment, what are the estimated total global CO2 emissions of all of the scheduled live flights currently in the air? 
-o	Consider only those flights with specified departure and destination airports.   ** done
-•	What are the estimated global CO2 emissions over the last five years (2017-2022)? -- let's ask Shane
-o	What are the emissions for each year/month within that timeframe? -- We can do each day, then multiplying value for estimated emissions 
-•	What are the top twenty most polluting routes globally, regionally (USA, Europe) and by country. --> Not even started possible solution
-o	Within each region and country, differentiate by domestic and international flights.  --> so compare country_code from airport databases 
-•	What are the total CO2 emissions by each Airline? --> "flag": "US", no problem with 
-o	Within this, filter by routes and short-haul and long-haul. --> function ready !!
-•	What are the estimated CO2 emissions by airport? --> dep_icao(out of flights) == icao_code (out of airport)
-o	Show a breakdown of both arrivals and departures and then short-haul and long-haul. ()
-•	What are the top twenty countries responsible for aviation CO2 emissions. --> "country_code": "US", no problem with
+1	At any given moment, what are the estimated total global CO2 emissions of all of the scheduled live flights currently in the air? 
+1	Consider only those flights with specified departure and destination airports.   ** done
+2	What are the estimated global CO2 emissions over the last five years (2017-2022)? -- let's ask Shane
+3	What are the emissions for each year/month within that timeframe? -- We can do each day, then multiplying value for estimated emissions 
+4	What are the top twenty most polluting routes globally, regionally (USA, Europe) and by country. --> Not even started possible solution
+5	Within each region and country, differentiate by domestic and international flights.  --> so compare country_code from airport databases 
+6	What are the total CO2 emissions by each Airline? --> "flag": "US", no problem with 
+6	Within this, filter by routes and short-haul and long-haul. --> function ready !!
+7	What are the estimated CO2 emissions by airport? --> dep_icao(out of flights) == icao_code (out of airport)
+7	Show a breakdown of both arrivals and departures and then short-haul and long-haul. ()
+7	What are the top twenty countries responsible for aviation CO2 emissions. --> "country_code": "US", no problem with
 •	Top twenty countries responsible for aviation CO2 emissions. Filter by:
 o	By domestic flights only.
 o	By international flights only.
