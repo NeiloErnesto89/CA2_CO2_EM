@@ -6,3 +6,5 @@ link to formula: https://stackoverflow.com/questions/4913349/haversine-formula-i
 
 Will update this as needed
 
+Added API request to formula : 9/2/23
+

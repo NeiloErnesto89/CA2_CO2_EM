@@ -1,6 +1,7 @@
 Co2
 New calculations and Terminal UI
+API request added 9/2/23
 
-New work on 30/1/23
+Updated 9/2/23
 
 
