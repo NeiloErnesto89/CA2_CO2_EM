@@ -1,8 +1,18 @@
 import math #Math library for calculations incl. Pi, sqrt etc
 import requests
+import json
 
-# The URL for the API endpoint
-url = ""
+#API key request
+params = {
+  'api_key': 'YOUR-API-KEY',
+  'params1': 'value1'
+}
+method = 'ping'
+api_base = 'http://airlabs.co/api/v9/'
+api_result = requests.get(api_base+method, params)
+api_response = api_result.json()
+
+print(json.dumps(api_response, indent=4, sort_keys=True))
 
 # Make the API request
 response = requests.get(url)
