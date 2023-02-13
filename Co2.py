@@ -1,8 +1,9 @@
 import math #Math library for calculations incl. Pi, sqrt etc
 import requests
+import requests
 import json
 
-#API key request
+#API request
 params = {
   'api_key': 'YOUR-API-KEY',
   'params1': 'value1'
@@ -13,6 +14,9 @@ api_result = requests.get(api_base+method, params)
 api_response = api_result.json()
 
 print(json.dumps(api_response, indent=4, sort_keys=True))
+
+# The URL for the API endpoint
+url = ""
 
 # Make the API request
 response = requests.get(url)
