@@ -191,7 +191,7 @@ class ApiResponse:
                 #print(f'Flight CO2 emissions is {Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"])))} kg');
               #  print(f'{result} kg CO2 emitted into the atmosphere.')
                 total_result += result
-                print(f'Total consumption so far is {round(total_result, 2)} KG  per passenger  ')
+                print(f'Total consumption so far is {round(total_result, 2)} KG  per passenger ')
             else:
                 print("Error")
 
