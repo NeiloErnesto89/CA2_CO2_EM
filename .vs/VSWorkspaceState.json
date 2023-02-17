@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\UnitTests"
   ],
-  "SelectedNode": "\\C:\\Users\\David\\Source\\Repos\\CA2_CO2_EM",
+  "SelectedNode": "\\UnitTests\\DistanceTest.py",
   "PreviewInSolutionExplorer": false
 }
