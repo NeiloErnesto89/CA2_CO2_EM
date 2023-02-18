@@ -117,7 +117,7 @@ class ApiResponse:
     
 
     def __init__(self):
-        self.flights_list = ApiConnector('airlabs', 'flights', 'dep_icao,arr_icao,flight_number,flag,aircraft_icao')
+        self.flights_list = ApiConnector('airlabs', 'flights')
         self.countries_list = ApiConnector('airlabs', 'countries')
         self.airports_list = ApiConnector('airlabs', 'airports', 'icao_code,lat,lng')
         self.cities_list = ApiConnector('airlabs', 'cities')
@@ -189,7 +189,7 @@ class ApiResponse:
     def list_all_flights(self):
         #List all flights
         total_result = 0 
-        for i in self.flights_list.read_data_file():
+        for i in self.flights_list.get_data_from_api():
             if(i.get('dep_icao') and i.get('arr_icao')):
                 try:
                     print(f"Flight Number is {i['flight_number']} and the airline is {i['flag']} and the aircraft is {i['aircraft_icao']} going from {i['dep_icao']} to {i['arr_icao']}");
@@ -212,7 +212,7 @@ class ApiResponse:
         for i in self.flights_list.read_data_file():
             if(i.get('dep_icao') and i.get('arr_icao')):
                 if 'flag' in i:
-                    result += round(Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao']))), 2)
+                    result += Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
                     temp[i['flag']] = temp.get(i['flag'], round(result, 2)) + round(result, 2)
                     print(temp)
                     total_result += result
@@ -293,12 +293,17 @@ class ApiResponse:
         #List flights by airline (passing airline name)
         total_result = 0
         for i in self.flights_list.read_data_file():
-            if(i.get('airline_name')):
-                if(i['airline_name'] == airline):
+            try:
+                if(i['airline_icao'] == airline):
                         result = Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
                         print(f'Flight CO2 emissions is {Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"])))} kg');
                         total_result += result
                         print(f'Total consumption from {airline} so far is {round(total_result, 2)} kg ')
+            except:
+                pass
+
+    def list_all_flights_by_country_(self, ):
+       pass
      
    
 class ApiConnector:
@@ -372,7 +377,7 @@ class ApiConnector:
 # Program starts here
 if __name__ == "__main__":
  
-    
+   #ApiConnector('airlabs', 'flights').write_to_file()
    #Flights = ApiConnector('airlabs', 'flights',).get_data_from_api()
    # print(Flights)
     
@@ -385,7 +390,7 @@ if __name__ == "__main__":
    
    
    #ApiConnector('airlabs', 'flights', 'dep_icao,arr_icao,flight_number,flag,aircraft_icao').write_to_file()
-    ApiConnector('airlabs', 'flights').get_data_from_api()
+   # ApiConnector('airlabs', 'flights').get_data_from_api()
     
    # print(ApiConnector('airlabs', 'routes', 'dep_icao=EDDL').get_data_from_api())
     
@@ -396,10 +401,11 @@ if __name__ == "__main__":
              
 
     
-
+     
     
    #All Flights - q1 
-    print(ApiResponse().list_all_flights_2())
+   #ApiResponse().list_all_flights()
+    #print(ApiResponse().list_all_flights_2()) -- countries magic
   # print(ApiResponse().get_all_departure_airport());
 
    # Get Emissions by Airport
@@ -416,9 +422,10 @@ if __name__ == "__main__":
 
    #List by country - international
    # ApiResponse().list_international_flights_by_region('ED')
+    ApiResponse().list_flights_by_airline('IBE')
         
 
-"""
+"""""
 
 1	At any given moment, what are the estimated total global CO2 emissions of all of the scheduled live flights currently in the air? 
 1	Consider only those flights with specified departure and destination airports.   --> DONE
