@@ -1,6 +1,6 @@
 ﻿"""
     This is the main file of the program. It contains the main function and the author which is
-    bloobsky
+    github.com/bloobsky
 """
 
 import requests
@@ -89,30 +89,6 @@ class Emissions:
         else:
             print(f'That was a short-haul flight.')
 
-
-"""   
-Not gonna be used but shows the calculations. 
-    def calculate_distance(self, start_point, end_point):
-    # start_point, end_point in format [latitude, longitude] can get that from airports api
-    # Convertion to Radians so we can use math to check the distance
-        def to_radians(degrees):
-            return math.pi * degrees / 180
-
-        EARTH_RADIUS = 6.371E3
-
-        p1 = to_radians(start_point[0])
-        p2 = to_radians(end_point[0])
-
-        delta_p = to_radians(start_point[0] - end_point[0])
-        delta_lambda = to_radians(start_point[1] - end_point[p1])
-
-        calc =  math.sin(0.5 * delta_p)**2 + math.cos(p1) * math.cos(p2) * math.sin(0.5 * delta_lambda)**2
-        c = 2 * math.atan2(math.sqrt(calc), math.sqrt(1 - calc))
-        result = c * EARTH_RADIUS   #  result in KM
-        return result 
-        """
-    
-
 class ApiResponse:
     
 
@@ -128,6 +104,7 @@ class ApiResponse:
         self.routes_list = ApiConnector('airlabs', 'routes')
 
     def get_iata_code(self):
+        # Get all iata codes
         for i in self.airlines_list.read_data_file():
             yield[i['iata_code']]
 
@@ -562,7 +539,7 @@ if __name__ == "__main__":
    # ApiResponse().list_flights_by_aircraft_type()
 
    ### routes
-    ApiConnector('airlabs', 'routes').save_routes('KJFK')
+    #ApiConnector('airlabs', 'routes').save_routes('KJFK')
     ApiResponse().list_top_polluted_routes()
 
 """""
@@ -571,7 +548,7 @@ if __name__ == "__main__":
 1	Consider only those flights with specified departure and destination airports.   --> DONE
 2	What are the estimated global CO2 emissions over the last five years (2017-2022)? --  Pandas
 3	What are the emissions for each year/month within that timeframe? -- Pandas
-4	What are the top twenty most polluting routes globally, regionally (USA, Europe) and by country. --> Pandas
+4	What are the top twenty most polluting routes globally, regionally (USA, Europe) and by country. --> ROUTES
 5	Within each region and country, differentiate by domestic and international flights.  --> DONE
 6	What are the total CO2 emissions by each Airline? --> "flag": "US", no problem with --> DONE
 6	Within this, filter by routes and short-haul and long-haul. --> DONE
