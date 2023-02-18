@@ -18,7 +18,7 @@ def get_time_and_region(region_name, year):
     data = df_new.loc[df_new['LOCATION'] == region_name]
     data2 = data.loc[data['TIME'] == year]
 
-    #Filter location and month
+    #Filter location month and year
 def get_month_year_region(region_name, year):
     data = df_new.loc[df_new['LOCATION'] == region_name]
     print(data)
