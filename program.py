@@ -395,6 +395,7 @@ class ApiResponse:
                     #print(f'Total consumption so far is {round(total_result, 2)} KG  per passenger ')
 
     def list_flights_by_aircraft_type(self):
+        #List all flights by aircraft type
         temp = {}
         total_result = 0 
         result = 0
@@ -408,12 +409,13 @@ class ApiResponse:
                     #print(f'Total consumption so far is {round(total_result, 2)} KG  per passenger ')
         
     def list_top_polluted_routes(self):
+        # List top polluted routes given by airport
          temp = {}
          result = 0
          for i in self.routes_list.read_data_file():
              if(i.get('dep_icao') and i.get('arr_icao')):
-                 result += Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
-                 temp[i['dep_icao'] + '-' + i['arr_icao']] = temp.get(i['dep_icao'] + '-' + i['arr_icao'], round(result, 2)) + round(result, 2)
+                 result += Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao']))) * sum(len(d) for d in i['days'])
+                 temp[i['dep_icao'] + '-' + i['arr_icao']] = temp.get(i['dep_icao'] + '-' + i['arr_icao'], round(result, 2)) + round(result, 2) 
                  print(temp)
                  #print(f'Total consumption so far is {round(total_result, 2)} KG  per passenger ')
          sorted_temp = sorted(temp.items(), key=lambda x: x[1], reverse=True)
