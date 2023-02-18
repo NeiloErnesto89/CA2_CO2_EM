@@ -6,7 +6,7 @@
 ### **Here is the link to the groups Github repo:** **[CSD CA2 CO2 Emissions Project](https://github.com/NeiloErnesto89/CA2_CO2_EM)** 
 
 
-# **Table of Contents**
+# **Table of Content**
 
 - [**Team Principles**](#team-principles)
 - [**Project Introduction**](#project-introduction)
