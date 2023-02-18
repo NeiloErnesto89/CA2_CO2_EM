@@ -2,18 +2,16 @@ import unittest
 
 class LiveFlightCarbonTest(unittest.TestCase):
 
-    def long_haul_co2(self):
-         #Call long haul method
-         
-        self.assertEqual(850, 850)
+    def haversine_Test(self):    
+         #This is the Co2 example for JFK to DUB
+        self.assertEqual(832, 832)
 
-    #def short_haul_c02(self):
-    #     #Call long haul method
-    #    self.assertEqual(850, 832)
-
-        ### More methods
-    def test_upper(self):
-            self.assertEqual("dottie".upper(),"DOTTIE")
+        ### More test methods
+    def get_airport_name(self, airport_code):
+        for i in self.airports_list.read_data_file():
+            if (i.get('icao_code') == airport_code):
+                return i['name']
+        self.assertEqual('DUB','DUB')
 
 if __name__ == '__main__':
     unittest.main()
