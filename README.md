@@ -35,7 +35,7 @@ Built in Python using the Flask/Django framework etc.
 
 > 1.	Django:  Django project backend by a relational database to create a website that allows users to track, calculate and analyse data records CO2 emissions by the aviation industry.
 > 2.	Backend: Python
-> 3.    Frontend: 
+> 3.    Frontend: HTML
 
 ## **UX** 
 
