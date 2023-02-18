@@ -1,0 +1,12 @@
+.env
+*sqlite3
+*pyc
+*.log
+*.pot
+local_settings.py
+venv/
+.vscode
+.gitpod.yml
+
+.vs/
+__pycache__
