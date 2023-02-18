@@ -407,11 +407,10 @@ class ApiResponse:
                     total_result += result
                     #print(f'Total consumption so far is {round(total_result, 2)} KG  per passenger ')
         
-    def list_top_polluted_routes(self, airport_icao):
+    def list_top_polluted_routes(self):
          temp = {}
          result = 0
-         download_data = ApiConnector('airlabs', 'routes', airport_icao).write_to_file()
-         for i in download_data.read_data_file():
+         for i in self.routes_list.read_data_file():
              if(i.get('dep_icao') and i.get('arr_icao')):
                  result += Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
                  temp[i['dep_icao'] + '-' + i['arr_icao']] = temp.get(i['dep_icao'] + '-' + i['arr_icao'], round(result, 2)) + round(result, 2)
@@ -441,16 +440,23 @@ class ApiConnector:
             
         else:
             print('Invalid api')
-        
-                
+    
+    def save_routes(self, airport_icao):
+        params= {'api_key':  keys.AIRLABS_KEY,
+                'dep_icao': airport_icao}
+        api_result = requests.get(self.api_url, params)
+        api_response = api_result.json()
+
+        with open(self.query_type + '.json', 'w') as write_file: 
+            write_file.write(json.dumps(api_response['response']))
+        print(f'Data saved to {airport_icao} .json') 
+
+
     def get_data_from_api(self):
         # Get Data From Api
         params = {'api_key':  keys.AIRLABS_KEY }
-        if(self.query_type == 'routes'):
-            params['dep_icao'] = self.detailed_query
-        else:
-            params["_fields"]= self.detailed_query
-
+        params["_fields"]= self.detailed_query
+        print(params)
         api_result = requests.get(self.api_url, params)
         api_response = api_result.json()
             
@@ -552,7 +558,10 @@ if __name__ == "__main__":
     #ApiResponse().list_international_flights_by_countries()
 
    # ApiResponse().list_flights_by_aircraft_type()
-    ApiResponse().list_top_polluted_routes('KJFK')
+
+   ### routes
+    ApiConnector('airlabs', 'routes').save_routes('KJFK')
+    ApiResponse().list_top_polluted_routes()
 
 """""
 
