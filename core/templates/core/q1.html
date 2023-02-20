@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+
+<h1>Q1 Page</h1>
+
+
+
+<h2>For Loop</h2>
+
+<h3></h3>
+{% for items in flights %}
+
+{{items}}
+
+
+{% endfor %}
+
+
+<h2>Full List</h2>
+{{flights}}
+{% endblock %}
+

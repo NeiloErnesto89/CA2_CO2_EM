@@ -170,20 +170,68 @@ class ApiResponse:
     def list_all_flights(self):
         #List all flights
         total_result = 0 
+        response_dictionary = {}
+
+        
+        #with open('test.json', 'a') as f:
+        f = open("test.json", "a")
+            
+        f.write('{')
+        f.write('"flights": [')
+
+
         for i in self.flights_list.get_data_from_api():
+            
             if(i.get('dep_icao') and i.get('arr_icao')):
                 try:
+                    
+                    
                     print(f"Flight Number is {i['flight_number']} and the airline is {i['flag']} and the aircraft is {i['aircraft_icao']} going from {i['dep_icao']} to {i['arr_icao']}");
-                    print(f'Flight distance is {Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"]))} km');
+                    #test_dict.update({"FlightNumber": i['flight_number']});
+                    
+                    print(f'Flight distance is {Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),ApiResponse().get_airport_cordinates(i["arr_icao"]))} km');
+                    
+                    flight_distance = Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),ApiResponse().get_airport_cordinates(i["arr_icao"]))
+                    print(flight_distance)
+                    
                     result = Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
+                    #co_emissions = Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
                     print(f'Flight CO2 emissions is {Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"])))} kg');
+
+                    
                     print(f'{result} kg CO2 emitted into the atmosphere.')
                     total_result += result
                     print(f'Total consumption so far is {round(total_result, 2)} KG  per passenger ')
+
+
+
+                    f.write('{')
+
+                    line = '"flight_number":"' + i['flight_number'] + '",'
+                    f.write(line)
+                    print(line)
+                    
+                    line = '"distance":' + str(flight_distance) + ','
+                    f.write(line)
+                    print(line)
+                    
+                    line = '"co2_emissions":' + str(result)
+                    f.write(line)
+                    print(line)
+                    
+                    f.write('},')
+
                 except:
                     pass
             else:
                 print("No data available for this one")
+            
+        f.write(']')
+        f.write('}')
+        f.close()
+        
+        return response_dictionary
+        
     
     def list_all_flights_2(self):
         #List all flights
@@ -509,7 +557,7 @@ if __name__ == "__main__":
      
     
    #All Flights - q1 
-   #ApiResponse().list_all_flights()
+   ApiResponse().list_all_flights()
     #print(ApiResponse().list_all_flights_2()) -- countries magic
   # print(ApiResponse().get_all_departure_airport());
 
@@ -540,7 +588,7 @@ if __name__ == "__main__":
 
    ### routes
     #ApiConnector('airlabs', 'routes').save_routes('KJFK')
-    ApiResponse().list_top_polluted_routes()
+    #ApiResponse().list_top_polluted_routes()
 
 """""
 
