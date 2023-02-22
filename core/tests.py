@@ -1,11 +1,18 @@
-from django.test import TestCase
+# from django.test import TestCase
+# from Services.services import Emissions
+
+import pytest
+
+def test_example():
+    assert 1 == 1
+
 
 # Create your tests here.
 
 # from django.test import TestCase
-# from app.models import Animal
+# from Services.services import Emissions
 
-# class AnimalTestCase(TestCase):
+# class EmissionsTestCase(TestCase):
 #     def setUp(self):
 #         Animal.objects.create(name="lion", sound="roar")
 #         Animal.objects.create(name="cat", sound="meow")
