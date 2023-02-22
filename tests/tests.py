@@ -11,14 +11,13 @@ def test_example():
 def test_example_fail():
     assert 2 == 1
 
-
 @pytest.mark.xfail # as we anticpate failures     
 def test_example_fail():
     assert 2 == 1
     
-# @pytest.mark.slow # as we anticpate failures     
+# @pytest.mark.slow # as we anticpate a 'slow' test   
 # def test_example_fail():
-#     assert 2 == 1
+#     assert 2 == 1 
    
 # importing function from services and checking return functionality
 def test_is_long_haul():
@@ -30,46 +29,11 @@ def test_is_long_haul():
 def test_calculate_co2_emissions():
     # assert Emissions.calculate_co2_emissions(1500) == type(int)
     
-    cal_co2 = Emissions()
+    cal_co2 = Emissions() # instantiate E cls
     # cal_co2.calculate_co2_emissions(1500)
     expected_emissions = 16.04
+    assert cal_co2.calculate_co2_emissions(1500) == expected_emissions # true
 
-    assert cal_co2.calculate_co2_emissions(1500) == expected_emissions
-
-# test_is_long_haul(1500)
-
-# def test_calculate_co2_emissions(flight_distance):
-
-#        if (test_is_long_haul(flight_distance)):
-#            s = 280.21
-#            plf = 0.82
-#            cf = 0.74
-#            a_func = 0.0001
-#            b_func = 7.104
-#            c_func = 5044.93
-#        else:
-#            s = 153.51
-#            plf = 0.82
-#            cf = 0.93
-#            a_func = 0
-#            b_func = 2.714
-#            c_func = 1166.52
-        
-#        x = flight_distance
-#        cw = 2.40 
-#        ef = 3.15
-#        m = 2
-#        p = 0.54
-#        af = 0.00038
-#        afm = 11.68
-
-
-#        function_result = (a_func*x**2) + (b_func*x) + c_func # quadratic equations result
-#        rest_equation = (s * plf)  * (1 - cf) * cw * (ef * m + p) + (af * x) + afm
-#        result = function_result / rest_equation
-#        return round(result, 2)
-   
-# # test_calculate_co2_emissions(1500)
 
 # # Create your tests here.
 
