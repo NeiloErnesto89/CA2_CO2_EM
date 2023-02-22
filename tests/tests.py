@@ -1,6 +1,7 @@
 # from django.test import TestCase
-# from services import *
 from services import *
+# from Services.services import *
+# import Services.services
 import pytest
 
 def test_example():
@@ -25,6 +26,15 @@ def test_is_long_haul():
     assert is_long_haul(1500) == True
     assert is_long_haul(2000) == True
 
+
+def test_calculate_co2_emissions():
+    # assert Emissions.calculate_co2_emissions(1500) == type(int)
+    
+    cal_co2 = Emissions()
+    # cal_co2.calculate_co2_emissions(1500)
+    expected_emissions = 16.04
+
+    assert cal_co2.calculate_co2_emissions(1500) == expected_emissions
 
 # test_is_long_haul(1500)
 
