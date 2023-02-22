@@ -1,10 +1,8 @@
 from django.shortcuts import render
 from core.Services import *
 
-
 def home(request):
     return render(request, 'core/index.html')
-
 
 def q1(request):
     return render(request, 'core/q1.html')
