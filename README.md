@@ -70,3 +70,46 @@ python manage.py runserver
     pass: CA2123!
     ```
 
+#### Django-Pytest
+
+~~~bash
+    pip install django-pytest
+~~~
+
+Added ```pytest.ini``` config file with following details to facilitate a smooth testing suite
+
+```
+# -- FILE: pytest.ini (or tox.ini)
+[pytest]
+DJANGO_SETTINGS_MODULE = App.settings
+# -- recommended but optional:
+python_files = tests.py test_*.py *_tests.py
+```
+
+test files in core dir, we run the ```pytest``` command in the terminal (or ```pytest -x``` for stop on failure)
+
+~~~
+
+(.venv) PS C:\Users\XXXX\Desktop\Personal\Donegal_ATU\Contemporary_SW\XXXX\> pytest
+======================================================================= test session starts =======================================================================
+platform win32 -- Python 3.10.5, pytest-7.2.1, pluggy-1.0.0
+django: settings: App.settings (from ini)
+rootdir: C:\Users\XXXX\Desktop\Personal\Donegal_ATU\Contemporary_SW\XXXX\, configfile: pytest.ini
+plugins: django-4.5.2
+collected 2 items
+
+core\tests.py .F                                                                                                                                             [100%]
+
+============================================================================ FAILURES ============================================================================= 
+________________________________________________________________________ test_example_fail ________________________________________________________________________ 
+
+    def test_example_fail():
+>       assert 2 == 1
+E       assert 2 == 1
+
+core\tests.py:10: AssertionError
+===================================================================== short test summary info ===================================================================== 
+FAILED core/tests.py::test_example_fail - assert 2 == 1
+=================================================================== 1 failed, 1 passed in 0.89s =================================================================== 
+
+~~~
