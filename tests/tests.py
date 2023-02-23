@@ -1,8 +1,11 @@
 # from django.test import TestCase
 from services import *
+# from Services import services
 # from Services.services import *
 # import Services.services
+import haversine as hs
 import pytest
+import math
 
 def test_example():
     assert 1 == 1
@@ -29,25 +32,27 @@ def test_is_long_haul():
 def test_calculate_co2_emissions():
     # assert Emissions.calculate_co2_emissions(1500) == type(int)
     
-    cal_co2 = Emissions() # instantiate E cls
+    cal_co2 = Emissions() # instantiate E cls (create an instance of Emissions class)
     # cal_co2.calculate_co2_emissions(1500)
     expected_emissions = 16.04
     assert cal_co2.calculate_co2_emissions(1500) == expected_emissions # true
 
+@pytest.mark.xfail # as we anticpate failures 
+def test_calculate_distance_nonrounded_fail():
+    # (45.7597, 4.8422), (48.8567, 2.3508)
+    # distance = hs.haversine(40.748817, -73.985428) # NYC
+    distance = hs.haversine((45.7597, 4.8422), (48.8567, 2.3508))
+    calc_distance = Emissions() # instantiate E cls
+    
+    # this assertion will give us an error as we have not rounded the result
+    assert calc_distance.calculate_distance((45.7597, 4.8422), (48.8567, 2.3508)) == distance
 
-# # Create your tests here.
 
-# # from django.test import TestCase
-# # from Services.services import Emissions
-
-# # class EmissionsTestCase(TestCase):
-# #     def setUp(self):
-# #         Animal.objects.create(name="lion", sound="roar")
-# #         Animal.objects.create(name="cat", sound="meow")
-
-# #     def test_animals_can_speak(self):
-# #         """Animals that can speak are correctly identified"""
-# #         lion = Animal.objects.get(name="lion")
-# #         cat = Animal.objects.get(name="cat")
-# #         self.assertEqual(lion.speak(), 'The lion says "roar"')
-# #         self.assertEqual(cat.speak(), 'The cat says "meow"')
+def test_calculate_distance():
+    
+    distance = hs.haversine((45.7597, 4.8422), (48.8567, 2.3508))
+    distance_rounded = round(distance, 2)
+    calc_distance = Emissions() # instantiate E cls
+    
+    # this assertion will give be a success as we have rounded to 2 decimal places
+    assert calc_distance.calculate_distance((45.7597, 4.8422), (48.8567, 2.3508)) == distance_rounded
