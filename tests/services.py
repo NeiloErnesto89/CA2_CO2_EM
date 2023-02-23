@@ -86,8 +86,11 @@ class Emissions:
         # Check if distance is long or short
         if(distance > 1500):
             print(f'That was a long-haul flight.')
+            # added by Neil to test with a return statement
+            return True
         else:
             print(f'That was a short-haul flight.')
+            return False
 
 class ApiResponse:
     
@@ -113,6 +116,9 @@ class ApiResponse:
         for i in self.flights_list:
             try:
                 print(i['flag'])
+                
+                # via Neil refactor for testing 23/02/23
+                return i['flag']
             except:
                 pass
             
