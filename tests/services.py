@@ -115,7 +115,8 @@ class ApiResponse:
         # Get all flights by country
         for i in self.flights_list:
             try:
-                print(i['flag'])
+                # print(i['flag'])
+                print(type(i['flag']))
                 
                 # via Neil refactor for testing 23/02/23
                 return i['flag']
@@ -546,7 +547,8 @@ if __name__ == "__main__":
 
    ### routes
     #ApiConnector('airlabs', 'routes').save_routes('KJFK')
-    ApiResponse().list_top_polluted_routes()
+    # ApiResponse().list_top_polluted_routes()
+    ApiResponse.get_all_flights_country()
 
 """""
 

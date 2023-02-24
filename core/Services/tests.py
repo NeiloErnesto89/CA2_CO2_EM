@@ -1,11 +1,14 @@
 # from django.test import TestCase
 from services import *
+
 # from Services.services import *
-# import Services.services
+# from . import services
 import haversine as hs
 import pytest
 import inspect
-# import math
+import json
+import numpy as np
+import os
 
 def test_example():
     assert 1 == 1
@@ -81,15 +84,50 @@ def test_is_distance_long_or_short():
 
 def test_get_iata_code():
     apr = ApiResponse()
-    apr_func = apr.get_iata_code()
-    # assert isinstance(cf_func, )
-    # assert isinstance(cf_func, list)
-    
+    apr_func = apr.get_iata_code()    
     # inspect returns true if obj is a generator (via yield from function)
     assert inspect.isgenerator(apr_func)
     
 # def test_get_all_flights_country():
 #     apr = ApiResponse()
 #     apr_func = apr.get_all_flights_country()
-    # assert isinstance(cf_func, )
-    # assert isinstance(apr_func, list), "value returns list elements"
+#     assert isinstance(apr_func, apr) , "value returns True"
+
+# 119 
+# def test_get_airport_name():
+#     get_airport_name = ApiResponse().get_airport_name("JFK")
+#     assert get_airport_name == "JFK", "returns param they it's asked for"
+#     assert get_airport_name != "DUB"
+#     get_airport_name_two = ApiResponse().get_airport_name("DUB")
+#     assert get_airport_name_two == "DUB"
+    
+# have to rewrite tests to check functionality
+def test_get_all_arrival_airport():
+    api_con = ApiResponse()
+    # api_con.get_all_arrival_airport() # object not iterable ..
+    # if(['arr_icao'] == ['icao_code']):
+    #     print(['lat'], ['lng'])
+    
+
+def test_get_all_departure_airport():
+    pass
+
+def test_list_all_airlines():
+    api_con = ApiResponse()
+
+def test_list_all_flights():
+    pass
+
+### API Connector Class
+
+def test_api_connector():
+    api_get = 'airlabs'
+    query_type = 'flight'
+    detailed_query = {'detailed': True}
+    
+    api_con = ApiConnector(api_get, query_type, detailed_query)
+    
+    assert isinstance(api_con, ApiConnector)
+    assert api_con.api_get == api_get , "value is api_get"
+    assert api_con.query_type == query_type , "value is query type"
+    assert api_con.detailed_query == detailed_query , "value is detailed query"
