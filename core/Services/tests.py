@@ -120,6 +120,15 @@ def test_list_all_airlines():
 def test_list_all_flights():
     pass
 
+def test_list_all_flights_2():
+    pass
+
+def test_list_flights_with_departure_airport():
+    pass
+
+def test_list_flights_with_arrival_airport():
+    pass
+
 ### API Connector Class
 
 def test_api_connector():
