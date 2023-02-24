@@ -102,9 +102,11 @@ def test_get_iata_code():
 #     assert get_airport_name_two == "DUB"
     
 # have to rewrite tests to check functionality
+@pytest.mark.xfail()
 def test_get_all_arrival_airport():
     api_con = ApiResponse()
-    # api_con.get_all_arrival_airport() # object not iterable ..
+    api_con.get_all_arrival_airport() # object not iterable ..
+    # assert ap1 == False
     # if(['arr_icao'] == ['icao_code']):
     #     print(['lat'], ['lng'])
     

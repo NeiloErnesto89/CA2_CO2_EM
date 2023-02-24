@@ -7,6 +7,7 @@ import requests
 import json
 import pprint as pprint
 import haversine as hs
+# import keys as keys
 import keys as keys
 import numpy as np
 
@@ -117,6 +118,8 @@ class ApiResponse:
         for i in self.flights_list:
             try:
                 print(i['flag'])
+                print("below is the type for flights!")
+                print(type(i['flag']))
             except:
                 pass
             
@@ -124,6 +127,8 @@ class ApiResponse:
         # Get airport name based on icao_code
         for i in self.airports_list.read_data_file():
             if (i.get('icao_code') == airport_code):
+                print("below is the type for airport name!")
+                print(type(i['name']))
                 return i['name']
 
     def get_all_arrival_airport(self):
@@ -544,8 +549,10 @@ if __name__ == "__main__":
 
    ### routes
     #ApiConnector('airlabs', 'routes').save_routes('KJFK')
-    ApiResponse().list_top_polluted_routes()
-
+    # ApiResponse().list_top_polluted_routes()
+    ApiResponse().get_airport_name("JFK")
+    # ApiResponse().get_all_flights_country()
+    
 """""
 
 1	At any given moment, what are the estimated total global CO2 emissions of all of the scheduled live flights currently in the air? 
