@@ -93,13 +93,13 @@ def test_get_iata_code():
 #     apr_func = apr.get_all_flights_country()
 #     assert isinstance(apr_func, apr) , "value returns True"
 
-# 119 
-# def test_get_airport_name():
-#     get_airport_name = ApiResponse().get_airport_name("JFK")
-#     assert get_airport_name == "JFK", "returns param they it's asked for"
-#     assert get_airport_name != "DUB"
-#     get_airport_name_two = ApiResponse().get_airport_name("DUB")
-#     assert get_airport_name_two == "DUB"
+# PASSING 
+def test_get_airport_name():
+    get_airport_name = ApiResponse().get_airport_name("EGKK") # pass in ICAO code
+    assert get_airport_name == "London Gatwick Airport", "returns London Gatwick as its icao is EGKK "
+    # assert get_airport_name != "DUBA"
+    # get_airport_name_two = ApiResponse().get_airport_name("DUB")
+    # assert get_airport_name_two == "DUB"
     
 # have to rewrite tests to check functionality
 @pytest.mark.xfail()
