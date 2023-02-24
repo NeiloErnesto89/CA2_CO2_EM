@@ -96,10 +96,10 @@ def test_get_iata_code():
 # PASSING 
 def test_get_airport_name():
     get_airport_name = ApiResponse().get_airport_name("EGKK") # pass in ICAO code
+    get_airport_name_2 = ApiResponse().get_airport_name("EIDW") # pass in ICAO code
     assert get_airport_name == "London Gatwick Airport", "returns London Gatwick as its icao is EGKK "
-    # assert get_airport_name != "DUBA"
-    # get_airport_name_two = ApiResponse().get_airport_name("DUB")
-    # assert get_airport_name_two == "DUB"
+    assert get_airport_name_2 == "Dublin Airport", "returns Dublin as its icao is EIDW "
+    
     
 # have to rewrite tests to check functionality
 @pytest.mark.xfail()
@@ -110,9 +110,11 @@ def test_get_all_arrival_airport():
     # if(['arr_icao'] == ['icao_code']):
     #     print(['lat'], ['lng'])
     
-
+# have to rewrite tests to check functionality
+@pytest.mark.xfail()
 def test_get_all_departure_airport():
-    pass
+    api_con = ApiResponse()
+    api_con.get_all_departure_airport() # object not iterable ..
 
 def test_list_all_airlines():
     api_con = ApiResponse()

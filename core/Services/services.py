@@ -151,7 +151,9 @@ class ApiResponse:
                         try:
                             if(i['dep_icao'] == j['icao_code']):
                                 print(j['lat'], j['lng'])
-                                break;
+                                #refactored Neil
+                                return (j['lat'], j['lng'])
+                                # break
                         except:
                             pass
                 
