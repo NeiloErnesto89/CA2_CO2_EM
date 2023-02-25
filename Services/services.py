@@ -1,4 +1,4 @@
-﻿"""
+"""
     This is the main file of the program. It contains the main function and the author which is
     github.com/bloobsky
 """
@@ -543,7 +543,6 @@ if __name__ == "__main__":
     ApiResponse().list_top_polluted_routes()
 
 """""
-
 1	At any given moment, what are the estimated total global CO2 emissions of all of the scheduled live flights currently in the air? 
 1	Consider only those flights with specified departure and destination airports.   --> DONE
 2	What are the estimated global CO2 emissions over the last five years (2017-2022)? --  Pandas
@@ -562,4 +561,3 @@ o	Combined CO2 emissions from domestic and international flights. DONE
 o	By country of aircraft registration. DONE
 •	Top twenty aircraft types responsible for the most CO2 emissions. DONE
 """ 
-
