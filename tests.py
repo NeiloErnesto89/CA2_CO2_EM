@@ -326,3 +326,27 @@ def test_api_connector():
     assert api_con.api_get == api_get , "value is api_get"
     assert api_con.query_type == query_type , "value is query type"
     assert api_con.detailed_query == detailed_query , "value is detailed query"
+    
+    
+def test_save_routes():
+    pass
+
+def test_get_data_from_api():
+    pass
+
+def test_write_to_file():
+    pass
+
+def test_read_data_file():
+    pass
+
+def test_print_data_from_api():
+    pass
+
+def test_print_api_key():
+    # api_key = ApiConnector.print_api_key()
+    # assert api_key == api_key # add actually api key string here
+    pass
+    
+def test_check_server_is_running():
+    pass
