@@ -668,7 +668,11 @@ class ApiConnector:
         
             
 # Program starts here
-#if __name__ == "__main__":
+if __name__ == "__main__":
+    
+    # ApiConnector('airlabs', 'flights')
+    # chip = ApiResponse().list_all_flights_2()
+    # print(type(chip))
  
    #ApiConnector('airlabs', 'flights').write_to_file()
    #Flights = ApiConnector('airlabs', 'flights',).get_data_from_api()
@@ -678,12 +682,12 @@ class ApiConnector:
    # ApiResponse().get_all_flights_country()
     
    #Print Airport Coordinates
-   # print(ApiResponse().get_airport_cordinates('EDDL'));
+   print(ApiResponse().get_airport_cordinates('EDDL'))
    # print(ApiResponse().get_airport_cordinates('EDDF'));
    
    
    #ApiConnector('airlabs', 'flights', 'dep_icao,arr_icao,flight_number,flag,aircraft_icao').write_to_file()
-   # ApiConnector('airlabs', 'flights').get_data_from_api()
+#    ApiConnector('airlabs', 'flights').get_data_from_api()
     
    # print(ApiConnector('airlabs', 'routes', 'dep_icao=EDDL').get_data_from_api())
     
@@ -697,13 +701,17 @@ class ApiConnector:
      
     
    #All Flights - q1 
-   #ApiResponse().list_all_flights()
+#    ApiConnector('airlabs', 'flights')
+#    ApiResponse().list_all_flights(api)
+#    ApiResponse().list_flights_with_arrival_airport('EGKK')
     #print(ApiResponse().list_all_flights_2()) -- countries magic
-  # print(ApiResponse().get_all_departure_airport());
+    # print(ApiResponse().get_all_departure_airport())
+    # ApiConnector('airlabs', 'flights')
+    # print(ApiResponse().get_all_arrival_airport())
 
    # Get Emissions by Airport
 
-   #print(ApiResponse().list_flights_with_departure_airport('EDDL'))
+#    print(ApiResponse().list_flights_with_departure_airport('EDDL'))
    # print(ApiResponse().list_flights_with_departure_airport('EDDF'))
     
    # List all airports
@@ -725,77 +733,78 @@ class ApiConnector:
     #ApiConnector('airlabs', 'routes').save_routes('KJFK')
     #ApiResponse().list_top_polluted_routes()
 
-"""
+# """
 
-1	At any given moment, what are the estimated total global CO2 emissions of all of the scheduled live flights currently in the air? 
-1	Consider only those flights with specified departure and destination airports.   --> DONE
-2	What are the estimated global CO2 emissions over the last five years (2017-2022)? --  Pandas
-3	What are the emissions for each year/month within that timeframe? -- Pandas
-4	What are the top twenty most polluting routes globally, regionally (USA, Europe) and by country. --> ROUTES
-5	Within each region and country, differentiate by domestic and international flights.  --> DONE
-6	What are the total CO2 emissions by each Airline? --> "flag": "US", no problem with --> DONE
-6	Within this, filter by routes and short-haul and long-haul. --> DONE
-7	What are the estimated CO2 emissions by airport? --> dep_icao(out of flights) == icao_code DONE
-7	Show a breakdown of both arrivals and departures and then short-haul and long-haul. () DONE 
-7	What are the top twenty countries responsible for aviation CO2 emissions. --> "country_code": "US", no problem with
-•	Top twenty countries responsible for aviation CO2 emissions. Filter by: #Done
-o	By domestic flights only. #Done
-o	By international flights only. DONE
-o	Combined CO2 emissions from domestic and international flights. DONE
-o	By country of aircraft registration. DONE
-•	Top twenty aircraft types responsible for the most CO2 emissions. DONE
-""" 
+# 1	At any given moment, what are the estimated total global CO2 emissions of all of the scheduled live flights currently in the air? 
+# 1	Consider only those flights with specified departure and destination airports.   --> DONE
+# 2	What are the estimated global CO2 emissions over the last five years (2017-2022)? --  Pandas
+# 3	What are the emissions for each year/month within that timeframe? -- Pandas
+# 4	What are the top twenty most polluting routes globally, regionally (USA, Europe) and by country. --> ROUTES
+# 5	Within each region and country, differentiate by domestic and international flights.  --> DONE
+# 6	What are the total CO2 emissions by each Airline? --> "flag": "US", no problem with --> DONE
+# 6	Within this, filter by routes and short-haul and long-haul. --> DONE
+# 7	What are the estimated CO2 emissions by airport? --> dep_icao(out of flights) == icao_code DONE
+# 7	Show a breakdown of both arrivals and departures and then short-haul and long-haul. () DONE 
+# 7	What are the top twenty countries responsible for aviation CO2 emissions. --> "country_code": "US", no problem with
+# •	Top twenty countries responsible for aviation CO2 emissions. Filter by: #Done
+# o	By domestic flights only. #Done
+# o	By international flights only. DONE
+# o	Combined CO2 emissions from domestic and international flights. DONE
+# o	By country of aircraft registration. DONE
+# •	Top twenty aircraft types responsible for the most CO2 emissions. DONE
 
-
-"""
-customtkinter.set_appearance_mode("System")
-customtkinter.set_default_color_theme("blue")
+# """ 
 
 
-root = customtkinter.CTk()
-root.geometry("600x500")
-root.title("Flight Pollution Calculator")
-root.minsize(300, 200)
-
-# Grid
-root.grid_rowconfigure((0,1,3), weight=1)
-root.grid_rowconfigure(2, weight=3)
-root.grid_columnconfigure((0,1,2), weight=1)
+# """
+# customtkinter.set_appearance_mode("System")
+# customtkinter.set_default_color_theme("blue")
 
 
+# root = customtkinter.CTk()
+# root.geometry("600x500")
+# root.title("Flight Pollution Calculator")
+# root.minsize(300, 200)
 
-def optionmenu_callback(choice):
-    print("optionmenu dropdown clicked:", choice)
+# # Grid
+# root.grid_rowconfigure((0,1,3), weight=1)
+# root.grid_rowconfigure(2, weight=3)
+# root.grid_columnconfigure((0,1,2), weight=1)
+
+
+
+# def optionmenu_callback(choice):
+#     print("optionmenu dropdown clicked:", choice)
     
-def print_to_console(print_value):
-    print_value = print_value
-    textbox1.insert("end", print_value + '\n')
+# def print_to_console(print_value):
+#     print_value = print_value
+#     textbox1.insert("end", print_value + '\n')
 
-def button_start():
-    print(textbox1)
-    #ApiResponse().list_all_flights(textbox1)
+# def button_start():
+#     print(textbox1)
+#     #ApiResponse().list_all_flights(textbox1)
 
-label1 = customtkinter.CTkLabel(master=root, text="Flight Pollution Calculator", anchor=tkinter.CENTER)
-label1.grid(row=0, column=0, padx=10, pady=10, columnspan=4)
+# label1 = customtkinter.CTkLabel(master=root, text="Flight Pollution Calculator", anchor=tkinter.CENTER)
+# label1.grid(row=0, column=0, padx=10, pady=10, columnspan=4)
 
-label1 = customtkinter.CTkLabel(master=root, text="Chose your Option:")
-label1.grid(row=1, column=0, padx=5, pady=10)
+# label1 = customtkinter.CTkLabel(master=root, text="Chose your Option:")
+# label1.grid(row=1, column=0, padx=5, pady=10)
 
-combobox = customtkinter.CTkOptionMenu(master=root, command=optionmenu_callback, values=["List all Airports", "List all Airlines", "List all Flights", ], )
-combobox.grid(row=1, column=1, padx=5, pady=10)
-combobox.set("option 2")  # set initial value
+# combobox = customtkinter.CTkOptionMenu(master=root, command=optionmenu_callback, values=["List all Airports", "List all Airlines", "List all Flights", ], )
+# combobox.grid(row=1, column=1, padx=5, pady=10)
+# combobox.set("option 2")  # set initial value
 
-entry = customtkinter.CTkEntry(master=root)
-entry.grid(row=1, column=2, padx=5, pady=10)
+# entry = customtkinter.CTkEntry(master=root)
+# entry.grid(row=1, column=2, padx=5, pady=10)
 
-button1 = customtkinter.CTkButton(master=root, command=button_start, text="Start")
-button1.grid(row=1, column=3, padx=5, pady=10)
+# button1 = customtkinter.CTkButton(master=root, command=button_start, text="Start")
+# button1.grid(row=1, column=3, padx=5, pady=10)
 
-textbox1 = customtkinter.CTkTextbox(master=root)
-textbox1.grid(row=2, column=0, columnspan=4, padx=20, pady=10, sticky="nsew")
+# textbox1 = customtkinter.CTkTextbox(master=root)
+# textbox1.grid(row=2, column=0, columnspan=4, padx=20, pady=10, sticky="nsew")
 
 
-"""
+# """
 
 
 
@@ -804,7 +813,7 @@ textbox1.grid(row=2, column=0, columnspan=4, padx=20, pady=10, sticky="nsew")
 
 #if __name__ == "__main__":
 
-root.textbox1.insert("end", 'App initialized' + '\n')
+# root.textbox1.insert("end", 'App initialized' + '\n')
 
 
-root.mainloop()
+# root.mainloop()
