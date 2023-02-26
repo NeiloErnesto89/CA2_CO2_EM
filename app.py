@@ -13,6 +13,16 @@ import customtkinter
 import time
 import pandas as pd
 
+"""
+Constants for faster calculations
+"""
+CW = 2.40 
+EF = 3.15
+M = 2
+P = 0.54
+AF = 0.00038
+AFM = 11.68
+
 
 class MainGUI(customtkinter.CTk):
     def __init__(self):
@@ -54,10 +64,10 @@ class MainGUI(customtkinter.CTk):
                 self.textbox1.insert("end", 'Click "Start" when ready!' + '\n')
                 
             if choice == "Check estimated CO2 emissions over the last five years":
-                textvariable = ""
+                #textvariable = ""calculate_co2_emissions
                 #self.entry1.configure(placeholder_text="Disabled")
                 self.entry1.configure(state="disabled")
-                self.entry1.configure(textvariable=textvariable)
+                #self.entry1.configure(textvariable=textvariable)
                 self.textbox1.delete(1.0,tk.END)
                 self.textbox1.insert("end", 'Please select the Context' + '\n')
                 self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
@@ -300,10 +310,8 @@ class MainGUI(customtkinter.CTk):
             pass
         if sub_menu_choice == "Top most polluting routes by Region":
             region = self.entry1.get()
-            #list_domestic_flights_by_region(region)
         if sub_menu_choice == "Top most polluting routes by Country":
             country = self.entry1.get()
-            #list_international_flights_by_region(country)
         
         if sub_menu_choice == "Co2 emissions by Departure":
             self.textbox1.insert("end", 'Calculating...' + '\n')
@@ -332,8 +340,6 @@ class MainGUI(customtkinter.CTk):
             self.textbox1.insert("end", 'Calculating...' + '\n')
             ApiResponse().list_all_flights_by_registration_country()
             self.textbox1.insert("end", 'Done!' + '\n')
-
-
 
 
 root = MainGUI()
@@ -382,10 +388,8 @@ def get_month_year_region(region_name, year):
 
 class Emissions:
         
-      
     def calculate_co2_emissions(self, flight_distance):
 
-        
    # The following formula is used to calculate the total CO2-equivalent emissions:
    # 𝑬 = ()𝒂𝒙 𝟐 +𝒃𝒙 +𝒄 / 𝑺 ∗ 𝑷𝑳𝑭) ∗ (𝟏 −𝑪𝑭) ∗ 𝑪𝑾 ∗ (𝑬𝑭 ∗ 𝑴 + 𝑷)+ 𝐀𝐅 ∗ 𝐱 + �
    #E: CO2-eq emissions per passenger [kg]
@@ -407,41 +411,34 @@ class Emissions:
    #plf = passenger_load_factor # Shorthaul -> 0.82 ,  Longhaul -> 0.82 
    #cf = cargo_factor # Shorthaul -> 0.93 ,  Longhaul -> 0.74 
 
-   
-       if (is_long_haul(flight_distance)):
-           s = 280.21
-           plf = 0.82
-           cf = 0.74
-           a_func = 0.0001
-           b_func = 7.104
-           c_func = 5044.93
-       else:
-           s = 153.51
-           plf = 0.82
-           cf = 0.93
-           a_func = 0
-           b_func = 2.714
-           c_func = 1166.52
-        
-       x = flight_distance
-       cw = 2.40 
-       ef = 3.15
-       m = 2
-       p = 0.54
-       af = 0.00038
-       afm = 11.68
+        if (is_long_haul(flight_distance)):
+            s = 280.21
+            plf = 0.82
+            cf = 0.74
+            a_func = 0.0001
+            b_func = 7.104
+            c_func = 5044.93
+        else:
+            s = 153.51
+            plf = 0.82
+            cf = 0.93
+            a_func = 0
+            b_func = 2.714
+            c_func = 1166.52
+
+        x = flight_distance
 
 
-       function_result = (a_func*x**2) + (b_func*x) + c_func # quadratic equations result
-       rest_equation = (s * plf)  * (1 - cf) * cw * (ef * m + p) + (af * x) + afm
-       result = function_result / rest_equation
-       return round(result, 2)
+        function_result = (a_func**2) + (b_func) + c_func # quadratic equations result
+        rest_equation = (s * plf)  * (1 - cf) * CW * (EF * M + P) + (AF * x) + AFM
+        result = function_result / rest_equation
+        return round(result, 2)
 
-       
+
     def calculate_distance(self, departure_lat_lng, arrival_lat_lng):
         # Calculate distance
         distance = hs.haversine(departure_lat_lng, arrival_lat_lng)
-      #  print(f'Total distance is {round(distance, 2)} kilometeres, but full distance is {distance}')
+        #  print(f'Total distance is {round(distance, 2)} kilometeres, but full distance is {distance}')
         return round(distance, 2)
     
     def is_distance_long_or_short(self, distance):
@@ -646,7 +643,6 @@ class ApiResponse():
                 print(f"Total consumption so far is {round(total_result, 2)} KG per passenger")
             except:
                 pass
-        root.textbox1.insert("end", 'Calculation Complete' + '\n')
     
     def list_all_flights_2(self):
         #List all flights
