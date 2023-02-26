@@ -7,6 +7,6 @@ local_settings.py
 venv/
 .vscode
 .gitpod.yml
-
+keys.py
 .vs/
 __pycache__
