@@ -345,7 +345,7 @@ def test_print_data_from_api():
 
 def test_print_api_key():
     # api_key = ApiConnector.print_api_key()
-    # assert api_key == api_key # add actually api key string here
+    # assert api_key == api_key # add actually api key string 
     pass
     
 def test_check_server_is_running():
