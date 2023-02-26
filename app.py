@@ -288,7 +288,7 @@ class ApiResponse():
 
     def get_all_flights_country(self):
         # Get all flights by country
-        for i in self.flights_list:
+        for i in self.flights_list.read_data_file():
             try:
                 print(i['flag'])
             except:
@@ -303,8 +303,8 @@ class ApiResponse():
     def get_all_arrival_airport(self):
         # Get arrival airport based on icao_code
         print("Arrival Lang Lat")
-        for i in self.flights_list:
-            for j in self.airports_list:
+        for i in self.flights_list.read_data_file():
+            for j in self.airports_list.read_data_file():
                 try:
                     if(i['arr_icao'] == j['icao_code']):
                         print(j['lat'], j['lng'])
@@ -316,7 +316,7 @@ class ApiResponse():
         print("Departure Lang Lat")
         for i in self.flights_list:
             if(i.get('dep_icao') and i.get('arr_icao')):
-                for j in self.airports_list: 
+                for j in self.airports_list.read_data_file(): 
                         try:
                             if(i['dep_icao'] == j['icao_code']):
                                 print(j['lat'], j['lng'])
@@ -332,7 +332,7 @@ class ApiResponse():
 
     def list_all_airlines(self):
         # List all airlines
-        for i in self.airlines_list:
+        for i in self.airlines_list.read_data_file():
             try:
                 print(i['name'])
             except:
@@ -674,8 +674,8 @@ if __name__ == "__main__":
     # chip = ApiResponse().list_all_flights_2()
     # print(type(chip))
  
-   #ApiConnector('airlabs', 'flights').write_to_file()
-   #Flights = ApiConnector('airlabs', 'flights',).get_data_from_api()
+#    ApiConnector('airlabs', 'flights').write_to_file()
+#    Flights = ApiConnector('airlabs', 'flights',).get_data_from_api()
    # print(Flights)
 
    #Print Flight Flag

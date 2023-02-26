@@ -158,7 +158,13 @@ def test_get_iata_code():
 @pytest.mark.skip()
 def test_get_all_flights_country():
     ApiConnector('airlabs', 'flights') # api = 
-    ApiResponse().get_all_flights_country()
+    a = ApiResponse().get_all_flights_country()
+    
+    for i in a:
+        assert isinstance(i, dict), "Flight should be a dictionary"
+    
+
+# Flights = ApiConnector('airlabs', 'flights',).get_data_from_api()
 
 # PASSING 
 def test_get_airport_name():
@@ -286,7 +292,6 @@ def test_list_flights_by_airline():
     pass
     #List flights by airline(airline) (passing airline name)
 
-
 def test_list_all_flights_by_countries():
     pass
 
@@ -343,10 +348,15 @@ def test_read_data_file():
 def test_print_data_from_api():
     pass
 
-def test_print_api_key():
-    # api_key = ApiConnector.print_api_key()
-    # assert api_key == api_key # add actually api key string here
-    pass
+# def test_print_api_key():
+#     api_get = 'airlabs'
+#     query_type = 'flight'
+#     detailed_query = {'detailed': True}
+#     api_con = ApiConnector(api_get, query_type, detailed_query)
+#     api_var = api_con.print_api_key()
+#     # api_key = api_con.print_api_key()
+#     assert api_con.api_key == "26a62db0-6d6b-4ddd-9e9c-5bc2cd4545e4" # add actually api key string here
+    
     
 def test_check_server_is_running():
     pass
