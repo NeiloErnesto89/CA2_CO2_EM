@@ -20,7 +20,7 @@ class MainGUI(customtkinter.CTk):
 
         self.geometry("600x500")
         self.title("Flight Pollution Calculator")
-        self.minsize(300, 200)
+        self.minsize(600, 500)
         
         # Grid
         self.grid_rowconfigure((0,1,2,3,4), weight=1)
@@ -185,7 +185,7 @@ class MainGUI(customtkinter.CTk):
         self.label1.grid(row=1, column=0, padx=5, pady=5)
         
         self.main_menu_var = customtkinter.StringVar(value="")
-        self.main_menu = customtkinter.CTkOptionMenu(self, command=main_menu_callback, variable=self.main_menu_var, values=["List all Airports", "List all Airlines", "List all Countries", "Check estimated emissions of all of the scheduled flights","Check estimated CO2 emissions over the last five years", "What are the top twenty most polluting routes globally, regionally or by country", "Differentiate by domestic and international flights within each region and country","What are the total CO2 Emissions by each Airline ?","What are the estimated CO2 emissions by airport?","What are the top twenty countries responsible for aviation CO2 emissions?","What are the top twenty aircraft types responsible for the most CO2 emissions?"],)
+        self.main_menu = customtkinter.CTkOptionMenu(self, command=main_menu_callback, width=400, variable=self.main_menu_var, values=["List all Airports", "List all Airlines", "List all Countries", "Check estimated emissions of all of the scheduled flights","Check estimated CO2 emissions over the last five years", "What are the top twenty most polluting routes globally, regionally or by country", "Differentiate by domestic and international flights within each region and country","What are the total CO2 Emissions by each Airline ?","What are the estimated CO2 emissions by airport?","What are the top twenty countries responsible for aviation CO2 emissions?","What are the top twenty aircraft types responsible for the most CO2 emissions?"],)
         self.main_menu.grid(row=1, column=1, padx=5, pady=10, columnspan=3)
         self.main_menu.set("Please select an Option                                                                            ")
         
@@ -193,7 +193,7 @@ class MainGUI(customtkinter.CTk):
         self.label1.grid(row=2, column=0, padx=5, pady=5)
         
         self.sub1_menu_var = customtkinter.StringVar(value = "")
-        self.sub1_menu = customtkinter.CTkOptionMenu(self, state="disabled", command=sub1_menu_callback, variable=self.sub1_menu_var, values=[""])
+        self.sub1_menu = customtkinter.CTkOptionMenu(self, state="disabled", width=400, command=sub1_menu_callback, variable=self.sub1_menu_var, values=[""])
         self.sub1_menu.grid(row=2, column=1, padx=5, pady=10, columnspan=3)
         self.sub1_menu.set("Please select an Option                                                                            ")     
         
