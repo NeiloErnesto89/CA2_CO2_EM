@@ -11,8 +11,9 @@ import numpy as np
 import tkinter as tk
 import customtkinter
 import time
+import pytest
 
-
+# @pytest.fixture(scope='session') # added for pytest so app runs correctly when testing
 class MainGUI(customtkinter.CTk):
     def __init__(self):
         super().__init__()
@@ -590,7 +591,7 @@ class ApiResponse():
 class ApiConnector:
     
     def __init__(self, api_get, query_type='flight', detailed_query=None):
-        self.api_get = api_get;
+        self.api_get = api_get
         self.query_type = query_type
         self.detailed_query = detailed_query
         
