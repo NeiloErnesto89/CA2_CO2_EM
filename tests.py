@@ -158,10 +158,11 @@ def test_get_iata_code():
 @pytest.mark.skip()
 def test_get_all_flights_country():
     ApiConnector('airlabs', 'flights') # api = 
-    a = ApiResponse().get_all_flights_country()
+    flights = ApiResponse().get_all_flights_country()
     
-    for i in a:
-        assert isinstance(i, dict), "Flight should be a dictionary"
+    assert isinstance(flights, dict), "Flight should be a dictionary"
+        
+        
     
 
 # Flights = ApiConnector('airlabs', 'flights',).get_data_from_api()
