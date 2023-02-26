@@ -42,31 +42,37 @@ Built in Python using the Flask/Django framework etc.
 Here's how are App looks ..
 
 
-## Deployment
-1. In your virtual environment, install all requirements:
+# Deployment
+
+### Recommendation
+1. Recommendation is to deploy in an UNIX environment, but Windows should be work (not tested)
+2. Create a new folder and deploy the app in that folder
+
+### Installation
+1. Deploy the code from GitHub:
+    ~~~bash
+    git pull https://github.com/NeiloErnesto89/CA2_CO2_EM.git .
+    ~~~
+2. Install dependencies with the following command:
     ~~~bash
     pip install -r requirements.txt
     ~~~
-2. Migrate the database
-    ~~~bash
-    python manage.py migrate
-    ~~~
-3. Create a Super User
-    ~~~bash
-    python manage.py createsuperuser
-    ~~~
+### Run the App!
+~~~bash
+python App.py
+~~~
 
+# Credits
 
-### Debug Run
-```bash
-python manage.py runserver
-```
+## Technologies Used
+This application has been built by using the following technologies:
 
-### Settings
-
-- Admin Portal Credentials
-    ```
-    user: admin
-    pass: CA2123!
-    ```
-
+- <a href="https://www.python.org/"><img height="30" src="https://cdn.svgporn.com/logos/python.svg"></a>
+    - Python is a programming language that lets you work quickly and integrate systems more effectively.
+- Python Packages:
+    - [CustomTkinter](https://github.com/TomSchimansky/CustomTkinter) is a python UI-library based on Tkinter
+    - [Haversine](https://github.com/mapado/haversine) to calculate the distance (in various units) between two points on Earth using their latitude and longitude
+    - [NumPy](https://github.com/numpy/numpy) is a fundamental package for scientific computing with Python
+    - [Pandas](https://github.com/pandas-dev/pandas) is a Python package that provides fast, flexible, and expressive data structures designed to make working with "relational" or "labeled" data both easy and intuitive.
+<br><br>
+- see [requirements.txt](https://github.com/patrickpulfer/Code-Institute-M4/blob/main/requirements.txt) for full list!
