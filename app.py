@@ -2,13 +2,191 @@
     This is the main file of the program. It contains the main function and the author which is
     github.com/bloobsky
 """
-
 import requests
 import json
 import pprint as pprint
 import haversine as hs
 import keys as keys
 import numpy as np
+import tkinter as tk
+import customtkinter
+import time
+
+
+class MainGUI(customtkinter.CTk):
+    def __init__(self):
+        super().__init__()
+
+        self.geometry("600x500")
+        self.title("Flight Pollution Calculator")
+        self.minsize(300, 200)
+        
+        # Grid
+        self.grid_rowconfigure((0,1,2,3,4), weight=1)
+        self.grid_rowconfigure(5, weight=3)
+        self.grid_columnconfigure((0,1), weight=1)
+
+        """
+        Main Menu Callback
+        """
+        def main_menu_callback(choice):
+            if choice == "Check estimated emissions of all of the scheduled flights":
+                self.sub1_menu.configure(state="disabled")
+                self.sub1_menu.configure(values=["disabled"])
+                textvariable = "Disabled"
+                self.entry1.configure(placeholder_text="Disabled")
+                self.entry1.configure(state="disabled")
+                self.entry1.configure(textvariable=textvariable)
+                self.textbox1.delete(1.0,tk.END)
+                self.textbox1.insert("end", 'Please observe Console, as the calculation is too big for GUI to display!' + '\n')
+                self.textbox1.insert("end", 'WARNING: Will take several minutes to finish!' + '\n')
+                self.textbox1.insert("end", 'Click Start when ready!' + '\n')
+                
+            if choice == "List all Airports":
+                textvariable = "Disabled"
+                self.entry1.configure(placeholder_text="Disabled")
+                self.entry1.configure(state="disabled")
+                self.entry1.configure(textvariable=textvariable)
+                self.sub1_menu.configure(state="disabled")
+                self.sub1_menu.configure(values=["disabled"])
+                self.textbox1.delete(1.0,tk.END)
+                self.textbox1.insert("end", 'Click "Start" when ready!' + '\n')
+                
+            if choice == "Check estimated CO2 emissions over the last five years":
+                textvariable = "Disabled"
+                self.entry1.configure(placeholder_text="Disabled")
+                self.entry1.configure(state="disabled")
+                self.entry1.configure(textvariable=textvariable)
+                self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
+                self.sub1_menu.configure(state="enabled")
+                self.sub1_menu.configure(values=["What are the estimated global CO2 emissions over the last five years (2017-2022)?", "What are the emissions for each year/month within that timeframe?"])
+                
+            if choice == "What are the top twenty most polluting routes globally, regionally or by country":
+                textvariable = "Disabled"
+                self.entry1.configure(placeholder_text="Disabled")
+                self.entry1.configure(state="disabled")
+                self.entry1.configure(textvariable=textvariable)
+                self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
+                self.sub1_menu.configure(state="enabled")
+                self.sub1_menu.configure(values=["Globally", "by Region", "by Country"])
+            
+            if choice == "What are the most polltuing routes globally, regionally or by country":
+                textvariable = "Disabled"
+                self.entry1.configure(placeholder_text="Disabled")
+                self.entry1.configure(state="disabled")
+                self.entry1.configure(textvariable=textvariable)
+                self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
+                self.sub1_menu.configure(state="enabled")
+                self.sub1_menu.configure(values=["TBD"])
+            
+            if choice == "Differentiate by domestic and international flights within each region and country":
+                textvariable = "Disabled"
+                self.entry1.configure(placeholder_text="Disabled")
+                self.entry1.configure(state="disabled")
+                self.entry1.configure(textvariable=textvariable)
+                self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
+                self.sub1_menu.configure(state="enabled")
+                self.sub1_menu.configure(values=["TBD"])
+            
+            if choice == "What are the total CO2 Emissions by each Airline ?":
+                textvariable = "Disabled"
+                self.entry1.configure(placeholder_text="Disabled")
+                self.entry1.configure(state="disabled")
+                self.entry1.configure(textvariable=textvariable)
+                self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
+                self.sub1_menu.configure(state="enabled")
+                self.sub1_menu.configure(values=["TBD"])
+            
+            if choice == "What are the estimated CO2 emissions by airport?":
+                textvariable = "Disabled"
+                self.entry1.configure(placeholder_text="Disabled")
+                self.entry1.configure(state="disabled")
+                self.entry1.configure(textvariable=textvariable)
+                self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
+                self.sub1_menu.configure(state="enabled")
+                self.sub1_menu.configure(values=["TBD"])
+            
+            if choice == "What are the top twenty countries responsible for aviation CO2 emissions?":
+                textvariable = "Disabled"
+                self.entry1.configure(placeholder_text="Disabled")
+                self.entry1.configure(state="disabled")
+                self.entry1.configure(textvariable=textvariable)
+                self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
+                self.sub1_menu.configure(state="enabled")
+                self.sub1_menu.configure(values=["TBD"])
+            
+            if choice == "What are the top twenty aircraft types responsible for the most CO2 emissions?":
+                textvariable = "Disabled"
+                self.entry1.configure(placeholder_text="Disabled")
+                self.entry1.configure(state="disabled")
+                self.entry1.configure(textvariable=textvariable)
+                self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
+                self.sub1_menu.configure(state="enabled")
+                self.sub1_menu.configure(values=["TBD"])
+
+        
+        """
+        Sub-Menu Callback
+        """
+        def sub1_menu_callback(choice):
+            pass
+
+        self.label1 = customtkinter.CTkLabel(self, text="Flight Pollution Calculator")
+        self.label1.grid(row=0, column=0, padx=10, pady=10, columnspan=4)
+
+
+        self.label1 = customtkinter.CTkLabel(self, text="Function:", anchor=tk.E)
+        self.label1.grid(row=1, column=0, padx=5, pady=5)
+        
+        self.main_menu_var = customtkinter.StringVar(value="")
+        self.main_menu = customtkinter.CTkOptionMenu(self, command=main_menu_callback, variable=self.main_menu_var, values=["List all Airports", "Check estimated emissions of all of the scheduled flights","Check estimated CO2 emissions over the last five years", "What are the top twenty most polluting routes globally, regionally or by country", "Differentiate by domestic and international flights within each region and country","What are the total CO2 Emissions by each Airline ?","What are the estimated CO2 emissions by airport?","What are the top twenty countries responsible for aviation CO2 emissions?","What are the top twenty aircraft types responsible for the most CO2 emissions?"],)
+        self.main_menu.grid(row=1, column=1, padx=5, pady=10)
+        self.main_menu.set("Please select an Option                                                                            ")
+        
+        self.label1 = customtkinter.CTkLabel(self, text="Context:", anchor=tk.E)
+        self.label1.grid(row=2, column=0, padx=5, pady=5)
+        
+        self.sub1_menu_var = customtkinter.StringVar(value="")
+        self.sub1_menu = customtkinter.CTkOptionMenu(self, state="disabled", command=sub1_menu_callback, variable=self.sub1_menu_var, values=[""])
+        self.sub1_menu.grid(row=2, column=1, padx=5, pady=10)
+        self.sub1_menu.set("Please select an Option                                                                            ")     
+        
+        self.label1 = customtkinter.CTkLabel(self, text="Parameters:")
+        self.label1.grid(row=3, column=0, padx=5, pady=5)
+        
+        self.entry1var = customtkinter.StringVar(value='Disabled                                                                                ')
+        self.entry1 = customtkinter.CTkEntry(self, state="disabled", textvariable=self.entry1var)
+        self.entry1.grid(row=3, column=1, padx=5, pady=10)
+        
+        
+        self.button1 = customtkinter.CTkButton(self, command=self.button_start_click, text="Start")
+        self.button1.grid(row=4, column=0, columnspan=2, padx=5, pady=10)
+        
+        self.textbox1var = customtkinter.StringVar(value='')
+        self.textbox1 = customtkinter.CTkTextbox(master=self)
+        self.textbox1.grid(row=5, column=0, columnspan=2, padx=20, pady=10, sticky="nsew")
+
+
+    """
+    """
+    def button_start_click(self):
+        choice = self.main_menu_var.get() 
+        
+        if choice == "Check estimated emissions of all of the scheduled flights":
+            self.textbox1.insert("end", 'Starting!' + '\n')
+            ApiResponse().list_all_flights(self)
+            
+        elif choice == "Check estimated CO2 emissions over the last five years":
+            pass
+        
+        elif choice == "What are the top twenty most polluting routes globally, regionally or by country":
+            ApiResponse().list_top_polluted_routes()
+            
+        elif choice == "List all Airports":
+            ApiResponse().list_all_airports(self)
+        
+
+root = MainGUI()
 
 
 def is_long_haul(flight_distance):
@@ -89,9 +267,8 @@ class Emissions:
         else:
             print(f'That was a short-haul flight.')
 
-class ApiResponse:
+class ApiResponse():
     
-
     def __init__(self):
         self.flights_list = ApiConnector('airlabs', 'flights')
         self.countries_list = ApiConnector('airlabs', 'countries')
@@ -160,17 +337,25 @@ class ApiResponse:
             except:
                 pass
             
-    def list_all_airports(self):
+    def list_all_airports(self, root):
         # List all airports
+        self.root = root
+        root.textbox1.insert("end", 'Listing all Airports...' + '\n')
         for i in self.airports_list.read_data_file():
             if(i.get('icao_code') and i.get('name')):
-                print(f'Airport name is {i["name"]} and the airport code is {i["icao_code"]} ')
+                root.textbox1.insert("end", 'Airport Code ' + i["icao_code"] + ' is ' + i["name"] + '\n')
+                #print(f'Airport name is {i["name"]} and the airport code is {i["icao_code"]} ')
+        print("Done!")
+        root.textbox1.insert("end", 'Done!' + '\n')
 
-            
-    def list_all_flights(self):
+    
+    def list_all_flights(self, root):
         #List all flights
+        self.root = root
         total_result = 0 
-        for i in self.flights_list.get_data_from_api():
+        time.sleep(3)
+        #for i in self.flights_list.get_data_from_api():
+        for i in self.flights_list.read_data_file():
             if(i.get('dep_icao') and i.get('arr_icao')):
                 try:
                     print(f"Flight Number is {i['flight_number']} and the airline is {i['flag']} and the aircraft is {i['aircraft_icao']} going from {i['dep_icao']} to {i['arr_icao']}");
@@ -179,11 +364,14 @@ class ApiResponse:
                     print(f'Flight CO2 emissions is {Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"])))} kg');
                     print(f'{result} kg CO2 emitted into the atmosphere.')
                     total_result += result
-                    print(f'Total consumption so far is {round(total_result, 2)} KG  per passenger ')
+                    print(f'Total consumption so far is {round(total_result, 2)} KG  per passenger ', flush=True)
+                    #time.sleep(10)               
                 except:
                     pass
             else:
-                print("No data available for this one")
+                pass
+                #print("No data available for this one")
+        root.textbox1.insert("end", 'Calculation Complete' + '\n')
     
     def list_all_flights_2(self):
         #List all flights
@@ -271,7 +459,6 @@ class ApiResponse:
                         print(f'Total consumption from {region_letter} so far is {round(total_result, 2)} kg ')
 
     def list_flights_by_airline(self, airline):
-
         #List flights by airline (passing airline name)
         total_result = 0
         for i in self.flights_list.read_data_file():
@@ -480,7 +667,7 @@ class ApiConnector:
         
             
 # Program starts here
-if __name__ == "__main__":
+#if __name__ == "__main__":
  
    #ApiConnector('airlabs', 'flights').write_to_file()
    #Flights = ApiConnector('airlabs', 'flights',).get_data_from_api()
@@ -526,12 +713,7 @@ if __name__ == "__main__":
    # ApiResponse().list_domestic_flights_by_region('ED')
 
    #List by country - international
-   # ApiResponse().list_international_flights_by_region('ED')
-
-   #List by airline
-   # ApiResponse().list_flights_by_airline('IBE')
-   #Last question
-   #ApiResponse().list_all_flights_by_countries()
+   # ApiResponse().list_international_flights_by_region('response = requests.get(url, headers=headers, auth=(nso_server['username'], nso_server['password']), verify=False).json()
    #ApiResponse().list_shorthaul_flights_by_countries()
     #ApiResponse().list_domestic_flights_by_countries()
     #ApiResponse().list_international_flights_by_countries()
@@ -540,9 +722,10 @@ if __name__ == "__main__":
 
    ### routes
     #ApiConnector('airlabs', 'routes').save_routes('KJFK')
-    ApiResponse().list_top_polluted_routes()
+    #ApiResponse().list_top_polluted_routes()
 
-"""""
+"""
+
 1	At any given moment, what are the estimated total global CO2 emissions of all of the scheduled live flights currently in the air? 
 1	Consider only those flights with specified departure and destination airports.   --> DONE
 2	What are the estimated global CO2 emissions over the last five years (2017-2022)? --  Pandas
@@ -561,3 +744,66 @@ o	Combined CO2 emissions from domestic and international flights. DONE
 o	By country of aircraft registration. DONE
 •	Top twenty aircraft types responsible for the most CO2 emissions. DONE
 """ 
+
+
+"""
+customtkinter.set_appearance_mode("System")
+customtkinter.set_default_color_theme("blue")
+
+
+root = customtkinter.CTk()
+root.geometry("600x500")
+root.title("Flight Pollution Calculator")
+root.minsize(300, 200)
+
+# Grid
+root.grid_rowconfigure((0,1,3), weight=1)
+root.grid_rowconfigure(2, weight=3)
+root.grid_columnconfigure((0,1,2), weight=1)
+
+
+
+def optionmenu_callback(choice):
+    print("optionmenu dropdown clicked:", choice)
+    
+def print_to_console(print_value):
+    print_value = print_value
+    textbox1.insert("end", print_value + '\n')
+
+def button_start():
+    print(textbox1)
+    #ApiResponse().list_all_flights(textbox1)
+
+label1 = customtkinter.CTkLabel(master=root, text="Flight Pollution Calculator", anchor=tkinter.CENTER)
+label1.grid(row=0, column=0, padx=10, pady=10, columnspan=4)
+
+label1 = customtkinter.CTkLabel(master=root, text="Chose your Option:")
+label1.grid(row=1, column=0, padx=5, pady=10)
+
+combobox = customtkinter.CTkOptionMenu(master=root, command=optionmenu_callback, values=["List all Airports", "List all Airlines", "List all Flights", ], )
+combobox.grid(row=1, column=1, padx=5, pady=10)
+combobox.set("option 2")  # set initial value
+
+entry = customtkinter.CTkEntry(master=root)
+entry.grid(row=1, column=2, padx=5, pady=10)
+
+button1 = customtkinter.CTkButton(master=root, command=button_start, text="Start")
+button1.grid(row=1, column=3, padx=5, pady=10)
+
+textbox1 = customtkinter.CTkTextbox(master=root)
+textbox1.grid(row=2, column=0, columnspan=4, padx=20, pady=10, sticky="nsew")
+
+
+"""
+
+
+
+## ApiResponse().list_all_flights()
+
+
+#if __name__ == "__main__":
+
+root.textbox1.insert("end", 'App initialized' + '\n')
+
+
+root.mainloop()
