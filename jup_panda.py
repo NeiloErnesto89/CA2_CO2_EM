@@ -44,7 +44,9 @@ def co2_by_time_and_region(year, region):
     # # print(result.sample(n=10)) # randomly select n rows
     # return result
 
-co2_by_time_and_region('2020', 'AUS')
+# co2_by_time_and_region('2020', 'AUS')
+
+co2_by_region('AUS')
 
 # df1.loc[df1['TIME'] == 2020]  
 
