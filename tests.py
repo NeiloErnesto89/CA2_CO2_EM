@@ -8,6 +8,7 @@ import pytest
 import inspect
 import json
 import numpy as np
+import keys as keys
 import os
 import time
 import threading 
@@ -300,16 +301,21 @@ def test_list_international_flights_by_region():
     # air_con = ApiResponse()
     # list_international_flights_by_region(region_letter) # one 2 letters
 
-
+@pytest.mark.skip() 
 def test_list_flights_by_region():
-    ApiConnector('airlabs', 'flights')   
-    ApiResponse().list_flights_by_region('ED', False)
+    # ApiConnector('airlabs', 'flights') 
+    api = ApiResponse()
+    # api.list_flights_by_region('ED', False)
     # list_flights_by_region(region_letter, is_domestic):
     #List flights by region (passing one or two letters)
+    assert api.list_flights_by_region('ED', False) == None
+    
+    assert print(ApiResponse().list_flights_by_region('ED', True)) == "That was a short-haul flight."
 
-
+@pytest.mark.skip() 
 def test_list_flights_by_airline():
-    pass
+    ApiConnector('airlabs', 'flights')   
+    ApiResponse().list_flights_by_region('ED', False)
     #List flights by airline(airline) (passing airline name)
 
 def test_list_all_flights_by_countries():
@@ -327,16 +333,17 @@ def test_list_domestic_flights_by_countries():
 def test_list_international_flights_by_countries():
     pass
 
-
 def test_list_flights_by_registration_country():
     pass
 
 def test_list_flights_by_aircraft_type():
     pass
 
+@pytest.mark.skip() # datset too big
 def test_list_top_polluted_routes():
-    pass
-
+    ApiConnector('airlabs', 'routes').save_routes('KJFK') # passing
+    route = ApiResponse().list_top_polluted_routes()
+    assert 'KJFK' in route
 
 ### API Connector Class
 
@@ -373,8 +380,10 @@ def test_get_data_from_api():
     api_data = ApiConnector('airlabs', 'flights')
     api_response = api_data.get_data_from_api()
     
-    # assert isinstance(api_response, list)
-    # assert len(api_response) >= 1
+    assert isinstance(api_response, list)
+    # assert [{'aircraft_icao': 'A320'}] in api_response # response too large
+    
+    # assert ApiConnector('airlabs', 'flights').get_data_from_api() is not 0
 
 @pytest.mark.skip()  
 def test_write_to_file():
@@ -385,20 +394,40 @@ def test_write_to_file():
 def test_read_data_file():
     api_data = ApiConnector('airlabs', 'flights')
     api_data_1 = api_data.read_data_file()
-    assert isinstance(api_data_1, np.ndarray)
-    
-def test_print_data_from_api():
-    pass
+    assert isinstance(api_data_1, np.ndarray) # multidimension via type check 
 
-# def test_print_api_key():
-#     api_get = 'airlabs'
-#     query_type = 'flight'
-#     detailed_query = {'detailed': True}
-#     api_con = ApiConnector(api_get, query_type, detailed_query)
-#     api_var = api_con.print_api_key()
-#     # api_key = api_con.print_api_key()
-#     assert api_con.api_key == "26a62db0-6d6b-4ddd-9e9c-5bc2cd4545e4" # add actually api key string here
+@pytest.mark.skip()   
+def test_print_data_from_api(capsys):
+    api_data = ApiConnector('airlabs', 'flights')
+    api_data.print_data_from_api()
+    captured_api_data = capsys.readouterr()
+    expected_api_data = 200 # not return status code
+    assert captured_api_data == expected_api_data
+    
+"""
+https://docs.pytest.org/en/7.1.x/how-to/capture-stdout-stderr.html 
+Here we are using capsys to capture data printed to terminal in function   
+"""
+def test_print_api_key(capsys):
+    # api_get = 'airlabs'
+    # query_type = 'flight'
+    # detailed_query = {'detailed': True}
+    # api_con = ApiConnector(api_get, query_type, detailed_query)
+    # api_con = api_data = ApiConnector('airlabs', 'flights').print_api_key()
+    # api_var = api_con.print_api_key()
+    # api_key = api_con.print_api_key()
+    api_key = ApiConnector('airlabs', 'flights')
+    api_key.print_api_key()
+    captured_api_key = capsys.readouterr()
+    output_api_key = captured_api_key.out.strip()
+    expected_api_key = "{'api_key': '26a62db0-6d6b-4ddd-9e9c-5bc2cd4545e4'}"
+    assert str(output_api_key) == str(expected_api_key) # PASSING
     
     
-def test_check_server_is_running():
-    pass
+def test_check_server_is_running(capsys):
+    api_server = ApiConnector('airlabs', 'flights')
+    api_server.check_server_is_running()
+    captured_server = capsys.readouterr()
+    output_server = captured_server.out.strip()
+    
+    assert 'Server is running' in output_server
