@@ -329,6 +329,7 @@ def test_api_connector():
     
     
 def test_save_routes():
+    ApiConnector().save_routes('EGKK')
     pass
 
 def test_get_data_from_api():
