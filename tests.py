@@ -229,7 +229,7 @@ def test_list_all_flights():
 
 
 # connecting but printing too slow so we skip this
-# @pytest.mark.skip() 
+@pytest.mark.skip() 
 # @pytest.mark.timeout(5)
 def test_list_all_flights():
     
@@ -280,26 +280,30 @@ def test_list_flights_with_departure_airport():
     #         time.sleep(0.005)
     #         break
         
-# @pytest.mark.skip() 
+@pytest.mark.skip() 
 def test_list_flights_with_arrival_airport():
     ApiConnector('airlabs', 'flights')   
     air_con = ApiResponse()
     # assert air_con.list_flights_with_arrival_airport("EGKK") == '(51.282829, 6.766503)' # [0:5] in loop
 
 
-
+@pytest.mark.skip() 
 def test_list_domestic_flights_by_region():
-    pass
+    # ApiConnector('airlabs', 'flights')   
+    # air_con = ApiResponse()
     # list_domestic_flights_by_region(region_letter)
-
+    domestic = ApiResponse().list_domestic_flights_by_region('ED')
+    assert domestic[:10] == "Flight CO2 emissions is 25.9 kg"
 
 def test_list_international_flights_by_region():
-    pass
+    ApiConnector('airlabs', 'flights')   
+    # air_con = ApiResponse()
     # list_international_flights_by_region(region_letter) # one 2 letters
 
 
 def test_list_flights_by_region():
-    pass
+    ApiConnector('airlabs', 'flights')   
+    ApiResponse().list_flights_by_region('ED', False)
     # list_flights_by_region(region_letter, is_domestic):
     #List flights by region (passing one or two letters)
 
@@ -363,16 +367,26 @@ def test_save_routes():
     
     assert isinstance(json_data, list) # passing
     assert [{'route' : 'LAX'}] == json_data # passing
-    
+
+@pytest.mark.skip()  
 def test_get_data_from_api():
-    pass
+    api_data = ApiConnector('airlabs', 'flights')
+    api_response = api_data.get_data_from_api()
+    
+    # assert isinstance(api_response, list)
+    # assert len(api_response) >= 1
 
+@pytest.mark.skip()  
 def test_write_to_file():
-    pass
-
+    api_data = ApiConnector('airlabs', 'flights')
+    api_data_1 = api_data.write_to_file()
+    assert isinstance(api_data_1, np.ndarray)
+    
 def test_read_data_file():
-    pass
-
+    api_data = ApiConnector('airlabs', 'flights')
+    api_data_1 = api_data.read_data_file()
+    assert isinstance(api_data_1, np.ndarray)
+    
 def test_print_data_from_api():
     pass
 

@@ -678,8 +678,8 @@ class ApiConnector:
 # Program starts here
 if __name__ == "__main__":
     
-    ApiConnector('airlabs', 'flights')
-    ApiResponse().list_all_flights_2()
+    # ApiConnector('airlabs', 'flights')
+    # ApiResponse().list_all_flights_2()
     # print(type(chip))
  
 #    ApiConnector('airlabs', 'flights').write_to_file()
@@ -726,8 +726,8 @@ if __name__ == "__main__":
    #print(ApiResponse().list_all_airports())
     
    #List by country - domestic
-   #ApiResponse().list_flights_by_region('ED', False)
-   # ApiResponse().list_domestic_flights_by_region('ED')
+   ApiResponse().list_flights_by_region('ED', False)
+#    ApiResponse().list_domestic_flights_by_region('ED')
 
    #List by country - international
    # ApiResponse().list_international_flights_by_region('response = requests.get(url, headers=headers, auth=(nso_server['username'], nso_server['password']), verify=False).json()
