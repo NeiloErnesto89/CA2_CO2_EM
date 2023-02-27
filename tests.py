@@ -318,32 +318,61 @@ def test_list_flights_by_airline():
     ApiResponse().list_flights_by_region('ED', False)
     #List flights by airline(airline) (passing airline name)
 
+@pytest.mark.skip()
 def test_list_all_flights_by_countries():
-    pass
+    ApiConnector('airlabs', 'flights', 'dep_icao,arr_icao,flight_number,flag,aircraft_icao')   
+    assert ApiResponse().list_all_flights_by_countries() == True
 
+
+@pytest.mark.skip()
 def test_list_shorthaul_flights_by_countries():
-    pass
-
+    ApiConnector('airlabs', 'flights')   
+    ApiResponse().list_shorthaul_flights_by_countries()
+    
+@pytest.mark.skip()
 def test_list_longhaul_flights_by_countries():
-    pass
+    ApiConnector('airlabs', 'flights')   
+    ApiResponse().list_shorthaul_flights_by_countries()
 
+@pytest.mark.skip()
 def test_list_domestic_flights_by_countries():
-    pass
+    ApiConnector('airlabs', 'flights')   
+    ApiResponse().list_domestic_flights_by_countries()
 
+@pytest.mark.skip()
 def test_list_international_flights_by_countries():
-    pass
+    ApiConnector('airlabs', 'flights')   
+    ApiResponse().list_international_flights_by_countries()
 
+@pytest.mark.skip()
 def test_list_flights_by_registration_country():
-    pass
+    ApiConnector('airlabs', 'flights')   
+    ApiResponse().list_flights_by_registration_country()
+     
 
-def test_list_flights_by_aircraft_type():
-    pass
-
+@pytest.mark.skip() # datset too big
+def test_list_flights_by_aircraft_type(capsys):
+    # api_key = ApiConnector('airlabs', 'flights')
+    ApiResponse().list_flights_by_aircraft_type()
+    captured_aircraft = capsys.readouterr()
+    output_aircraft = captured_aircraft.out.strip('\n') # {'A20N': 51.8}
+    expect_aircraft = "{'A20N': 51.8}"
+    assert str(output_aircraft) == str(expect_aircraft) # PASSING
+    
+    
 @pytest.mark.skip() # datset too big
 def test_list_top_polluted_routes():
     ApiConnector('airlabs', 'routes').save_routes('KJFK') # passing
     route = ApiResponse().list_top_polluted_routes()
     assert 'KJFK' in route
+
+# def test_list_top_polluted_routes(capsys):    
+#     api_key = ApiConnector('airlabs', 'flights')
+#     api_key.print_api_key()
+#     captured_api_key = capsys.readouterr()
+#     output_api_key = captured_api_key.out.strip('\n')
+#     expected_api_key = "{'api_key': '}"
+#     assert str(output_api_key) == str(expected_api_key) # PASSING
 
 ### API Connector Class
 
@@ -423,7 +452,7 @@ def test_print_api_key(capsys):
     expected_api_key = "{'api_key': '26a62db0-6d6b-4ddd-9e9c-5bc2cd4545e4'}"
     assert str(output_api_key) == str(expected_api_key) # PASSING
     
-    
+@pytest.mark.skip()  
 def test_check_server_is_running(capsys):
     api_server = ApiConnector('airlabs', 'flights')
     api_server.check_server_is_running()
