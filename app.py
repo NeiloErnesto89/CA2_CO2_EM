@@ -379,19 +379,26 @@ class ApiResponse():
         temp = {}
         total_result = 0 
         result = 0
-        for i in self.flights_list.read_data_file():
+        count = 0
+        for i in self.flights_list.read_data_file(): #[0:20]
             if(i.get('dep_icao') and i.get('arr_icao')):
                 if 'flag' in i:
                     result += Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
                     temp[i['flag']] = temp.get(i['flag'], round(result, 2)) + round(result, 2)
                     print(temp)
+                    print(type(temp))
                     total_result += result
+                    count += 1
+                    if count == 1:
+                        print('max reached for counter')
+                        break
+                    return temp
                     #print(f'Total consumption so far is {round(total_result, 2)} KG  per passenger ')
 
     def list_flights_with_departure_airport(self, airport_icao):
         # List flights by departure airport
         total_result = 0
-        for i in self.flights_list.get_data_from_api():
+        for i in self.flights_list.get_data_from_api()[0:50]:
             if(i.get('dep_icao') == airport_icao):
                 filter_long_short_haul = Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao']))
                 print(Emissions().is_distance_long_or_short(filter_long_short_haul))
@@ -403,7 +410,8 @@ class ApiResponse():
     def list_flights_with_arrival_airport(self, airport_icao):
         # List flights by arrival airport
         total_result = 0
-        for i in self.flights_list.read_data_file():
+        # refactored by Neil to return just a certain amount
+        for i in self.flights_list.read_data_file()[0:5]: 
             if(i.get('arr_icao') == airport_icao):
                 filter_long_short_haul = Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao']))
                 print(Emissions().is_distance_long_or_short(filter_long_short_haul))
@@ -670,8 +678,8 @@ class ApiConnector:
 # Program starts here
 if __name__ == "__main__":
     
-    # ApiConnector('airlabs', 'flights')
-    # chip = ApiResponse().list_all_flights_2()
+    ApiConnector('airlabs', 'flights')
+    ApiResponse().list_all_flights_2()
     # print(type(chip))
  
 #    ApiConnector('airlabs', 'flights').write_to_file()
@@ -682,7 +690,7 @@ if __name__ == "__main__":
    # ApiResponse().get_all_flights_country()
     
    #Print Airport Coordinates
-   print(ApiResponse().get_airport_cordinates('EDDL'))
+#    print(ApiResponse().get_airport_cordinates('EDDL'))
    # print(ApiResponse().get_airport_cordinates('EDDF'));
    
    
@@ -703,11 +711,11 @@ if __name__ == "__main__":
    #All Flights - q1 
 #    ApiConnector('airlabs', 'flights')
 #    ApiResponse().list_all_flights(api)
-#    ApiResponse().list_flights_with_arrival_airport('EGKK')
+#    print(ApiResponse().list_flights_with_arrival_airport('EGKK'))
+#    print(ApiResponse().list_flights_with_departure_airport('EDDL'))
     #print(ApiResponse().list_all_flights_2()) -- countries magic
     # print(ApiResponse().get_all_departure_airport())
     # ApiConnector('airlabs', 'flights')
-    # print(ApiResponse().get_all_arrival_airport())
 
    # Get Emissions by Airport
 
