@@ -695,7 +695,7 @@ if __name__ == "__main__":
    
    
    #ApiConnector('airlabs', 'flights', 'dep_icao,arr_icao,flight_number,flag,aircraft_icao').write_to_file()
-#    ApiConnector('airlabs', 'flights').get_data_from_api()
+   ApiConnector('airlabs', 'flights').print_data_from_api()
     
    # print(ApiConnector('airlabs', 'routes', 'dep_icao=EDDL').get_data_from_api())
     
@@ -726,7 +726,7 @@ if __name__ == "__main__":
    #print(ApiResponse().list_all_airports())
     
    #List by country - domestic
-   ApiResponse().list_flights_by_region('ED', False)
+#    print(ApiResponse().list_flights_by_region('ED', True))
 #    ApiResponse().list_domestic_flights_by_region('ED')
 
    #List by country - international
@@ -738,8 +738,8 @@ if __name__ == "__main__":
    # ApiResponse().list_flights_by_aircraft_type()
 
    ### routes
-    #ApiConnector('airlabs', 'routes').save_routes('KJFK')
-    #ApiResponse().list_top_polluted_routes()
+    # ApiConnector('airlabs', 'routes').save_routes('KJFK')
+    # ApiResponse().list_top_polluted_routes()
 
 # """
 
