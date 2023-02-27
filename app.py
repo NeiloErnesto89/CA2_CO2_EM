@@ -11,6 +11,17 @@ import numpy as np
 import tkinter as tk
 import customtkinter
 import time
+import pandas as pd
+
+"""
+Constants for faster calculations
+"""
+CW = 2.40 
+EF = 3.15
+M = 2
+P = 0.54
+AF = 0.00038
+AFM = 11.68
 
 
 class MainGUI(customtkinter.CTk):
@@ -19,12 +30,12 @@ class MainGUI(customtkinter.CTk):
 
         self.geometry("600x500")
         self.title("Flight Pollution Calculator")
-        self.minsize(300, 200)
+        self.minsize(600, 500)
         
         # Grid
         self.grid_rowconfigure((0,1,2,3,4), weight=1)
         self.grid_rowconfigure(5, weight=3)
-        self.grid_columnconfigure((0,1), weight=1)
+        self.grid_columnconfigure((0,1,2,3), weight=1)
 
         """
         Main Menu Callback
@@ -34,12 +45,12 @@ class MainGUI(customtkinter.CTk):
                 self.sub1_menu.configure(state="disabled")
                 self.sub1_menu.configure(values=["disabled"])
                 textvariable = "Disabled"
-                self.entry1.configure(placeholder_text="Disabled")
+                #self.entry1.configure(placeholder_text="Disabled")
                 self.entry1.configure(state="disabled")
                 self.entry1.configure(textvariable=textvariable)
                 self.textbox1.delete(1.0,tk.END)
-                self.textbox1.insert("end", 'Please observe Console, as the calculation is too big for GUI to display!' + '\n')
-                self.textbox1.insert("end", 'WARNING: Will take several minutes to finish!' + '\n')
+                self.textbox1.insert("end", 'Please observe Console, as the calculation is too big for GUI to display!' + '\n\n')
+                self.textbox1.insert("end", 'WARNING: Will take several minutes to finish!' + '\n\n')
                 self.textbox1.insert("end", 'Click Start when ready!' + '\n')
                 
             if choice == "List all Airports":
@@ -53,23 +64,28 @@ class MainGUI(customtkinter.CTk):
                 self.textbox1.insert("end", 'Click "Start" when ready!' + '\n')
                 
             if choice == "Check estimated CO2 emissions over the last five years":
-                textvariable = "Disabled"
-                self.entry1.configure(placeholder_text="Disabled")
+                #textvariable = ""calculate_co2_emissions
+                #self.entry1.configure(placeholder_text="Disabled")
                 self.entry1.configure(state="disabled")
-                self.entry1.configure(textvariable=textvariable)
+                #self.entry1.configure(textvariable=textvariable)
+                self.textbox1.delete(1.0,tk.END)
+                self.textbox1.insert("end", 'Please select the Context' + '\n')
                 self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
                 self.sub1_menu.configure(state="enabled")
-                self.sub1_menu.configure(values=["What are the estimated global CO2 emissions over the last five years (2017-2022)?", "What are the emissions for each year/month within that timeframe?"])
+                self.sub1_menu.configure(values=["Last five years by Region", "Last five years by Year & Region", "Last five years by Year, Month & Region"])
                 
-            if choice == "What are the top twenty most polluting routes globally, regionally or by country":
-                textvariable = "Disabled"
-                self.entry1.configure(placeholder_text="Disabled")
-                self.entry1.configure(state="disabled")
-                self.entry1.configure(textvariable=textvariable)
-                self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
-                self.sub1_menu.configure(state="enabled")
-                self.sub1_menu.configure(values=["Globally", "by Region", "by Country"])
+            if choice == "Top twenty most polluting routes globally, regionally or by country":
+                self.entry1.configure(state = "normal")
+                self.textbox1.delete(1.0,tk.END)
+                self.textbox1.insert("end", 'Note: Due to API limitations, we require to filter by Airport Routes' + '\n\n')
+                self.textbox1.insert("end", 'Note: Please observe the Console for result!' + '\n\n')
+                self.textbox1.insert("end", 'WARNING: Will take several minutes to finish!' + '\n\n')
+                self.textbox1.insert("end", 'Paramenters Required:' + '\n')
+                self.textbox1.insert("end", '     Airport ICAO code (four letters, ex. EIDW for Dublin):' + '\n')
+                self.entry1.configure(state = "normal")
+                self.entry2.configure(state="disabled")
             
+            """
             if choice == "What are the most polltuing routes globally, regionally or by country":
                 textvariable = "Disabled"
                 self.entry1.configure(placeholder_text="Disabled")
@@ -78,130 +94,302 @@ class MainGUI(customtkinter.CTk):
                 self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
                 self.sub1_menu.configure(state="enabled")
                 self.sub1_menu.configure(values=["TBD"])
+            """
             
-            if choice == "Differentiate by domestic and international flights within each region and country":
+            if choice == "The total CO2 Emissions by each Airline?":
                 textvariable = "Disabled"
                 self.entry1.configure(placeholder_text="Disabled")
+                self.entry1.configure(state = "normal" )
+                self.textbox1.delete(1.0,tk.END)
+                self.textbox1.insert("end", 'Please observe Console, as the calculation is too big for GUI to display!' + '\n\n')
+                self.textbox1.insert("end", 'WARNING: Will take several minutes to finish!' + '\n\n')
+                self.textbox1.insert("end", 'Click Start when ready!' + '\n')
+            
+            if choice == "Estimated CO2 emissions by airport?":
+                textvariable = "Disabled"
+                self.entry1.configure(state="disabled")
+                self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
+                self.sub1_menu.configure(state="enabled")
+                self.sub1_menu.configure(values=["Co2 emissions by Departure", "Co2 emissions by Arrival"])
+                self.textbox1.insert("end", 'Please select the context' + '\n')
+            
+            if choice == "Top twenty countries responsible for aviation CO2 emissions":
+                textvariable = "Disabled"
                 self.entry1.configure(state="disabled")
                 self.entry1.configure(textvariable=textvariable)
                 self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
                 self.sub1_menu.configure(state="enabled")
-                self.sub1_menu.configure(values=["TBD"])
+                self.sub1_menu.configure(values=["Top twenty by domestic flights", "Top twenty by international flights", "Domestic and international flights combined", "Top twenty by country of aircraft registration"])
             
-            if choice == "What are the total CO2 Emissions by each Airline ?":
-                textvariable = "Disabled"
-                self.entry1.configure(placeholder_text="Disabled")
-                self.entry1.configure(state="disabled")
-                self.entry1.configure(textvariable=textvariable)
-                self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
-                self.sub1_menu.configure(state="enabled")
-                self.sub1_menu.configure(values=["TBD"])
-            
-            if choice == "What are the estimated CO2 emissions by airport?":
-                textvariable = "Disabled"
-                self.entry1.configure(placeholder_text="Disabled")
-                self.entry1.configure(state="disabled")
-                self.entry1.configure(textvariable=textvariable)
-                self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
-                self.sub1_menu.configure(state="enabled")
-                self.sub1_menu.configure(values=["TBD"])
-            
-            if choice == "What are the top twenty countries responsible for aviation CO2 emissions?":
-                textvariable = "Disabled"
-                self.entry1.configure(placeholder_text="Disabled")
-                self.entry1.configure(state="disabled")
-                self.entry1.configure(textvariable=textvariable)
-                self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
-                self.sub1_menu.configure(state="enabled")
-                self.sub1_menu.configure(values=["TBD"])
-            
-            if choice == "What are the top twenty aircraft types responsible for the most CO2 emissions?":
-                textvariable = "Disabled"
-                self.entry1.configure(placeholder_text="Disabled")
-                self.entry1.configure(state="disabled")
-                self.entry1.configure(textvariable=textvariable)
-                self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
-                self.sub1_menu.configure(state="enabled")
-                self.sub1_menu.configure(values=["TBD"])
-
+            if choice == "Top twenty aircraft types responsible for the most CO2 emissions":
+                self.sub1_menu.configure(state="disabled")
         
         """
         Sub-Menu Callback
         """
         def sub1_menu_callback(choice):
-            pass
+            print('Sub Menu Callback: ', end='')
+            print(choice)
+            
+            if choice == "Last five years by Region":
+                self.sub1_menu_var.set("Last five years by Region")
+                self.entry1.configure(placeholder_text = "Region")
+                self.entry1.configure(state = "normal")
+                self.textbox1.delete(1.0,tk.END)
+                self.textbox1.insert("end", 'Note: Please observe the Console for result!' + '\n\n')
+                self.textbox1.insert("end", 'Paramenters Required:' + '\n')
+                self.textbox1.insert("end", '     Region Code (three letters) into the first parameter box:' + '\n')
+                
+            if choice == "Last five years by Year & Region":
+                self.sub1_menu_var.set("Last five years by Year & Region")
+                self.entry1.configure(placeholder_text = "Year")
+                self.entry2.configure(placeholder_text = "Region")
+                self.entry1.configure(state = "normal")
+                self.entry2.configure(state = "normal")
+                self.textbox1.delete(1.0,tk.END)
+                self.textbox1.insert("end", 'Note: Please observe the Console for result!' + '\n\n')
+                self.textbox1.insert("end", 'Paramenters Required:' + '\n')
+                self.textbox1.insert("end", '     Year into the first parameter box:' + '\n')
+                self.textbox1.insert("end", '     Region Code (three letters) into the second parameter box:' + '\n')
+            if choice == "Last five years by Year, Month & Region":
+                self.sub1_menu_var.set("Last five years by Year, Month & Region")
+                self.entry1.configure(placeholder_text = "Year")
+                self.entry2.configure(placeholder_text = "Month")
+                self.entry1.configure(state = "normal")
+                self.entry2.configure(state = "normal")
+                self.textbox1.delete(1.0,tk.END)
+                self.textbox1.insert("end", 'Note: Please observe the Console for result!' + '\n\n')
+                self.textbox1.insert("end", 'Paramenters Required:' + '\n')
+                self.textbox1.insert("end", '     Month & Year (ex. Dec-20) into the second parameter box:' + '\n')
+                self.textbox1.insert("end", '     Region Code (three letters) into the third parameter box:' + '\n')
+                
+            if choice == "Top most polluting routes by Region":
+                self.sub1_menu_var.set("Top most polluting routes by Region")
+                self.entry1.configure(state = "normal")
+                self.textbox1.delete(1.0,tk.END)
+                self.textbox1.insert("end", 'Note: Please observe the Console for result!' + '\n\n')
+                self.textbox1.insert("end", 'Paramenters Required:' + '\n')
+                self.textbox1.insert("end", '     Region Prefix Code (single letter, ex. E for Northern Europe):' + '\n')
+            if choice == "Top most polluting routes by Country":
+                self.sub1_menu_var.set("Top most polluting routes by Country")
+                self.entry1.configure(state = "normal")
+                self.textbox1.delete(1.0,tk.END)
+                self.textbox1.insert("end", 'Note: Please observe the Console for result!' + '\n\n')
+                self.textbox1.insert("end", 'Paramenters Required:' + '\n')
+                self.textbox1.insert("end", '     Country Prefix Code (two letters, ex. LS for Switzerland):' + '\n')
+            
+            if choice == "Co2 emissions by Departure":
+                self.sub1_menu_var.set("Co2 emissions by Departure")
+                self.entry1.configure(state = "normal")
+                self.textbox1.delete(1.0,tk.END)
+                self.textbox1.insert("end", 'Note: Please observe the Console for result!' + '\n\n')
+                self.textbox1.insert("end", 'Paramenters Required:' + '\n')
+                self.textbox1.insert("end", '     Airport Code (ex EIDW for Dublin:' + '\n')
+            if choice == "Co2 emissions by Arrival":
+                self.sub1_menu_var.set("Co2 emissions by Arrival")
+                self.entry1.configure(state = "normal")
+                self.textbox1.delete(1.0,tk.END)
+                self.textbox1.insert("end", 'Note: Please observe the Console for result!' + '\n\n')
+                self.textbox1.insert("end", 'Paramenters Required:' + '\n')
+                self.textbox1.insert("end", '     Airport Code (ex EIDW for Dublin):' + '\n')
+                
+            if choice == "Top twenty by domestic flights":
+                self.sub1_menu_var.set("Top twenty by domestic flights")
+                self.textbox1.delete(1.0,tk.END)
+                self.textbox1.insert("end", 'Note: Please observe the Console for result!' + '\n\n')
+            if choice == "Top twenty by international flights":
+                self.sub1_menu_var.set("Top twenty by international flights")
+                self.textbox1.delete(1.0,tk.END)
+                self.textbox1.insert("end", 'Note: Please observe the Console for result!' + '\n\n')
+            if choice == "Domestic and international flights combined":
+                self.sub1_menu_var.set("Domestic and international flights combined")
+                self.textbox1.delete(1.0,tk.END)
+                self.textbox1.insert("end", 'Note: Please observe the Console for result!' + '\n\n')
+            if choice == "Top twenty by country of aircraft registration":
+                self.sub1_menu_var.set("Top twenty by country of aircraft registration")
+                self.textbox1.delete(1.0,tk.END)
+                self.textbox1.insert("end", 'Note: Please observe the Console for result!' + '\n\n')
 
+
+        """
+        GUI Setup
+        """
         self.label1 = customtkinter.CTkLabel(self, text="Flight Pollution Calculator")
         self.label1.grid(row=0, column=0, padx=10, pady=10, columnspan=4)
-
 
         self.label1 = customtkinter.CTkLabel(self, text="Function:", anchor=tk.E)
         self.label1.grid(row=1, column=0, padx=5, pady=5)
         
         self.main_menu_var = customtkinter.StringVar(value="")
-        self.main_menu = customtkinter.CTkOptionMenu(self, command=main_menu_callback, variable=self.main_menu_var, values=["List all Airports", "Check estimated emissions of all of the scheduled flights","Check estimated CO2 emissions over the last five years", "What are the top twenty most polluting routes globally, regionally or by country", "Differentiate by domestic and international flights within each region and country","What are the total CO2 Emissions by each Airline ?","What are the estimated CO2 emissions by airport?","What are the top twenty countries responsible for aviation CO2 emissions?","What are the top twenty aircraft types responsible for the most CO2 emissions?"],)
-        self.main_menu.grid(row=1, column=1, padx=5, pady=10)
+        self.main_menu = customtkinter.CTkOptionMenu(self, command=main_menu_callback, width=400, variable=self.main_menu_var, values=["List all Airports", "List all Airlines", "List all Countries", "Check estimated emissions of all of the scheduled flights","Check estimated CO2 emissions over the last five years", "Top twenty most polluting routes globally, regionally or by country", "The total CO2 Emissions by each Airline?","Estimated CO2 emissions by airport?","Top twenty countries responsible for aviation CO2 emissions","Top twenty aircraft types responsible for the most CO2 emissions"],)
+        self.main_menu.grid(row=1, column=1, padx=5, pady=10, columnspan=3)
         self.main_menu.set("Please select an Option                                                                            ")
         
         self.label1 = customtkinter.CTkLabel(self, text="Context:", anchor=tk.E)
         self.label1.grid(row=2, column=0, padx=5, pady=5)
         
-        self.sub1_menu_var = customtkinter.StringVar(value="")
-        self.sub1_menu = customtkinter.CTkOptionMenu(self, state="disabled", command=sub1_menu_callback, variable=self.sub1_menu_var, values=[""])
-        self.sub1_menu.grid(row=2, column=1, padx=5, pady=10)
+        self.sub1_menu_var = customtkinter.StringVar(value = "")
+        self.sub1_menu = customtkinter.CTkOptionMenu(self, state="disabled", width=400, command=sub1_menu_callback, variable=self.sub1_menu_var, values=[""])
+        self.sub1_menu.grid(row=2, column=1, padx=5, pady=10, columnspan=3)
         self.sub1_menu.set("Please select an Option                                                                            ")     
         
         self.label1 = customtkinter.CTkLabel(self, text="Parameters:")
         self.label1.grid(row=3, column=0, padx=5, pady=5)
         
-        self.entry1var = customtkinter.StringVar(value='Disabled                                                                                ')
-        self.entry1 = customtkinter.CTkEntry(self, state="disabled", textvariable=self.entry1var)
+        #self.entry1var = customtkinter.StringVar()
+        self.entry1 = customtkinter.CTkEntry(self, state="disabled")
         self.entry1.grid(row=3, column=1, padx=5, pady=10)
         
+        #self.entry2var = customtkinter.StringVar()
+        self.entry2 = customtkinter.CTkEntry(self, state="disabled")
+        self.entry2.grid(row=3, column=2, padx=5, pady=10)
+
+        self.entry3 = customtkinter.CTkEntry(self, state="disabled")
+        self.entry3.grid(row=3, column=3, padx=5, pady=10)
         
         self.button1 = customtkinter.CTkButton(self, command=self.button_start_click, text="Start")
-        self.button1.grid(row=4, column=0, columnspan=2, padx=5, pady=10)
+        self.button1.grid(row=4, column=0, columnspan=4, padx=5, pady=10)
         
         self.textbox1var = customtkinter.StringVar(value='')
         self.textbox1 = customtkinter.CTkTextbox(master=self)
-        self.textbox1.grid(row=5, column=0, columnspan=2, padx=20, pady=10, sticky="nsew")
+        self.textbox1.grid(row=5, column=0, columnspan=4, padx=20, pady=10, sticky="nsew")
 
 
     """
+    Main Button Click
     """
     def button_start_click(self):
-        choice = self.main_menu_var.get() 
+        main_menu_choice = self.main_menu_var.get() 
+        sub_menu_choice = self.sub1_menu_var.get()
         
-        if choice == "Check estimated emissions of all of the scheduled flights":
+        print('Main Menu Choice: ', end='')
+        print(main_menu_choice)
+        
+        print('Sub Menu Choice: ', end='')
+        print(sub_menu_choice)
+        
+        if main_menu_choice == "Check estimated emissions of all of the scheduled flights":
             self.textbox1.insert("end", 'Starting!' + '\n')
             ApiResponse().list_all_flights(self)
-            
-        elif choice == "Check estimated CO2 emissions over the last five years":
-            pass
-        
-        elif choice == "What are the top twenty most polluting routes globally, regionally or by country":
+        elif main_menu_choice == "Top twenty most polluting routes globally, regionally or by country":
+            route = self.entry1.get()
+            self.textbox1.insert("end", 'Starting!' + '\n')
+            self.textbox1.insert("end", 'Getting data from Airlabs API...' + '\n')
+            ApiConnector('airlabs', 'routes').save_routes(route)
+            self.textbox1.insert("end", 'Calculating...' + '\n')
             ApiResponse().list_top_polluted_routes()
-            
-        elif choice == "List all Airports":
+            self.textbox1.insert("end", 'Done!' + '\n')
+        elif main_menu_choice == "List all Airports":
             ApiResponse().list_all_airports(self)
+        elif main_menu_choice == "List all Countries":
+            ApiResponse().list_all_countries(self)
+        elif main_menu_choice == "List all Airlines":
+            ApiResponse().list_all_airlines(self)
+        elif main_menu_choice == "The total CO2 Emissions by each Airline?":
+            self.textbox1.insert("end", 'Calculating...' + '\n')
+            ApiResponse().list_all_flights_by_airline(self)
+            self.textbox1.insert("end", 'Done!' + '\n')
+        elif main_menu_choice == "Top twenty aircraft types responsible for the most CO2 emissions":
+            self.textbox1.insert("end", 'Calculating...' + '\n')
+            ApiResponse().list_flights_by_aircraft_type()
+            self.textbox1.insert("end", 'Done!' + '\n')
         
+        if sub_menu_choice == "Last five years by Region":
+            region = self.entry1.get()
+            get_co2_by_region(region)
+        if sub_menu_choice == "Last five years by Year & Region":
+            year = self.entry1.get()
+            region = self.entry2.get()
+            get_time_and_region(region, year)
+        if sub_menu_choice == "Last five years by Year, Month & Region":
+            month_year = self.entry1.get()
+            region = self.entry2.get()
+            get_month_year_region(region, month_year)
+            
+        if sub_menu_choice == "Top most polluting routes Globally":
+            pass
+        if sub_menu_choice == "Top most polluting routes by Region":
+            region = self.entry1.get()
+        if sub_menu_choice == "Top most polluting routes by Country":
+            country = self.entry1.get()
+        
+        if sub_menu_choice == "Co2 emissions by Departure":
+            self.textbox1.insert("end", 'Calculating...' + '\n')
+            dep_airport = self.entry1.get()
+            ApiResponse().list_flights_with_departure_airport(dep_airport)
+            self.textbox1.insert("end", 'Done!' + '\n')
+        if sub_menu_choice == "Co2 emissions by Arrival":
+            self.textbox1.insert("end", 'Calculating...' + '\n')
+            arr_airport = self.entry1.get()
+            ApiResponse().list_flights_with_arrival_airport(arr_airport)
+            self.textbox1.insert("end", 'Done!' + '\n')
+            
+        if sub_menu_choice == "Top twenty by domestic flights":
+            self.textbox1.insert("end", 'Calculating...' + '\n')
+            ApiResponse().list_domestic_flights_by_countries()
+            self.textbox1.insert("end", 'Done!' + '\n')
+        if sub_menu_choice == "Top twenty by international flights":
+            self.textbox1.insert("end", 'Calculating...' + '\n')
+            ApiResponse().list_international_flights_by_countries()
+            self.textbox1.insert("end", 'Done!' + '\n')
+        if sub_menu_choice == "Domestic and international flights combined":
+            self.textbox1.insert("end", 'Calculating...' + '\n')
+            ApiResponse().list_flights_by_country()
+            self.textbox1.insert("end", 'Done!' + '\n')
+        if sub_menu_choice == "Top twenty by country of aircraft registration":
+            self.textbox1.insert("end", 'Calculating...' + '\n')
+            ApiResponse().list_all_flights_by_registration_country()
+            self.textbox1.insert("end", 'Done!' + '\n')
+
 
 root = MainGUI()
 
 
 def is_long_haul(flight_distance):
-        # if flight_distance below 1500 mark as short haul
+    # if flight_distance below 1500 mark as short haul
     if (flight_distance < 1500):
         return False
     else:
         return True 
 
+
+"""
+Historical Data from Stats file
+"""
+df = pd.read_csv('Aviation_Co2.csv', low_memory=False)
+df
+#Data to retrieve
+df_new = df[['LOCATION', 'Value', 'TIME', 'Time', 'Source of emissions']]
+#Get Co2 by region
+def get_co2_by_region(region_name):
+    #self.root = root
+    result = df_new.loc[df_new['LOCATION'] == region_name]
+    print(result)
+
+    #Get filter region and year
+def get_time_and_region(region_name, year):
+    data = df_new.loc[df_new['LOCATION'] == region_name]
+    data2 = data.loc[data['TIME'] == year]
+    print(data)
+    print(data2)
+
+    #Filter location month and year
+def get_month_year_region(region_name, year):
+    data = df_new.loc[df_new['LOCATION'] == region_name]
+    print(data)
+    data2 = data.loc[data['Time'] == year] 
+    print(data2)
+    
+    #Print region Austrailia in 2020
+    #get_time_and_region('AUS','2020')
+    #Print region USA in December 2022
+    #get_month_year_region('USA','Dec-22')
+
+
 class Emissions:
         
-      
     def calculate_co2_emissions(self, flight_distance):
 
-        
    # The following formula is used to calculate the total CO2-equivalent emissions:
    # 𝑬 = ()𝒂𝒙 𝟐 +𝒃𝒙 +𝒄 / 𝑺 ∗ 𝑷𝑳𝑭) ∗ (𝟏 −𝑪𝑭) ∗ 𝑪𝑾 ∗ (𝑬𝑭 ∗ 𝑴 + 𝑷)+ 𝐀𝐅 ∗ 𝐱 + �
    #E: CO2-eq emissions per passenger [kg]
@@ -223,41 +411,34 @@ class Emissions:
    #plf = passenger_load_factor # Shorthaul -> 0.82 ,  Longhaul -> 0.82 
    #cf = cargo_factor # Shorthaul -> 0.93 ,  Longhaul -> 0.74 
 
-   
-       if (is_long_haul(flight_distance)):
-           s = 280.21
-           plf = 0.82
-           cf = 0.74
-           a_func = 0.0001
-           b_func = 7.104
-           c_func = 5044.93
-       else:
-           s = 153.51
-           plf = 0.82
-           cf = 0.93
-           a_func = 0
-           b_func = 2.714
-           c_func = 1166.52
-        
-       x = flight_distance
-       cw = 2.40 
-       ef = 3.15
-       m = 2
-       p = 0.54
-       af = 0.00038
-       afm = 11.68
+        if (is_long_haul(flight_distance)):
+            s = 280.21
+            plf = 0.82
+            cf = 0.74
+            a_func = 0.0001
+            b_func = 7.104
+            c_func = 5044.93
+        else:
+            s = 153.51
+            plf = 0.82
+            cf = 0.93
+            a_func = 0
+            b_func = 2.714
+            c_func = 1166.52
+
+        x = flight_distance
 
 
-       function_result = (a_func*x**2) + (b_func*x) + c_func # quadratic equations result
-       rest_equation = (s * plf)  * (1 - cf) * cw * (ef * m + p) + (af * x) + afm
-       result = function_result / rest_equation
-       return round(result, 2)
+        function_result = (a_func**2) + (b_func) + c_func # quadratic equations result
+        rest_equation = (s * plf)  * (1 - cf) * CW * (EF * M + P) + (AF * x) + AFM
+        result = function_result / rest_equation
+        return round(result, 2)
 
-       
+
     def calculate_distance(self, departure_lat_lng, arrival_lat_lng):
         # Calculate distance
         distance = hs.haversine(departure_lat_lng, arrival_lat_lng)
-      #  print(f'Total distance is {round(distance, 2)} kilometeres, but full distance is {distance}')
+        #  print(f'Total distance is {round(distance, 2)} kilometeres, but full distance is {distance}')
         return round(distance, 2)
     
     def is_distance_long_or_short(self, distance):
@@ -267,10 +448,11 @@ class Emissions:
         else:
             print(f'That was a short-haul flight.')
 
+
 class ApiResponse():
     
     def __init__(self):
-        self.flights_list = ApiConnector('airlabs', 'flights')
+        self.flights_list = ApiConnector('airlabs', 'flights', 'dep_icao,arr_icao,flag,aircraft_icao,flight_number,airline_icao')
         self.countries_list = ApiConnector('airlabs', 'countries')
         self.airports_list = ApiConnector('airlabs', 'airports', 'icao_code,lat,lng')
         self.cities_list = ApiConnector('airlabs', 'cities')
@@ -280,6 +462,97 @@ class ApiResponse():
         self.taxes_list = ApiConnector('airlabs', 'taxes')
         self.routes_list = ApiConnector('airlabs', 'routes')
 
+
+    def list_international_flights_by_countries(self):
+    #List international flights by countries
+        temp = {}
+        total_result = 0 
+        result = 0
+        for i in self.flights_list.read_data_file():
+            if(i.get('dep_icao') and i.get('arr_icao')):
+                if 'flag' in i:
+                    if (i['dep_icao'][:1]) != (i['arr_icao'][:1]):
+                        result += Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
+                        temp[i['flag']] = temp.get(i['flag'], round(result, 2)) + round(result, 2)
+                        print(temp)
+                        total_result += result
+                        print(f'Total consumption so far is {round(total_result, 2)} KG  per passenger ')
+                        sorted_temp = sorted(temp.items(), key=lambda x: x[1], reverse=True)[:20]
+        print(sorted_temp)
+    def list_domestic_flights_by_countries(self):
+        #List domestic flights by countries
+        temp = {}
+        total_result = 0 
+        result = 0
+        for i in self.flights_list.read_data_file():
+            if(i.get('dep_icao') and i.get('arr_icao')):
+                if 'flag' in i and (i['dep_icao'][:1] == i['dep_icao'][:1]):
+                    result += Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
+                    temp[i['flag']] = temp.get(i['flag'], round(result, 2)) + round(result, 2)
+                    print(temp)
+                    total_result += result
+                    print(f'Total consumption so far is {round(total_result, 2)} KG  per passenger ') 
+                    sorted_temp = sorted(temp.items(), key=lambda x: x[1], reverse=True)[:20]
+        print(sorted_temp)
+    def list_flights_by_country(self):
+        #List all flights by registration country
+        temp = {}
+        total_result = 0 
+        result = 0
+        for i in self.flights_list.read_data_file():
+            if(i.get('dep_icao') and i.get('arr_icao')):
+                if 'flag' in i:
+                    result = Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
+                    temp[i['flag']] = temp.get(i['flag'], round(result, 2)) + round(result, 2)
+                    print(temp)
+                    total_result += result
+                    #print(f'Total consumption so far is {round(total_result, 2)} KG  per passenger ')
+                    sorted_temp = sorted(temp.items(), key=lambda x: x[1], reverse=True)[:20]
+        print(sorted_temp)
+        
+    def list_all_flights_by_registration_country(self):
+        #List all flights
+        temp = {}
+        result = 0
+        for i in self.flights_list.get_data_from_api():
+            if(i.get('dep_icao') and i.get('arr_icao')):
+                if 'flag' in i:
+                    result += Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
+                    temp["Country registration " +i['flag']] = temp.get(i['flag'], round(result, 2)) + round(result, 2)
+                    print(temp)
+            top_20 = sorted(temp.items(), key=lambda x: x[1], reverse=True)[:20]
+        print(top_20)
+
+    def list_all_flights_by_airline(self, root):
+        self.root = root
+        temp = {}
+        total_result = 0 
+        result = 0
+        flights = self.flights_list.get_data_from_api()
+        for i in flights:
+            if(i.get('dep_icao') and i.get('arr_icao')):
+                if 'airline_icao' in i:
+                    result += Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
+                    temp[i['airline_icao']] = temp.get(i['airline_icao'], round(result, 2)) + round(result, 2)
+                    print(temp)
+                    total_result += result
+        sorted_temp = sorted(temp.items(), key=lambda x: x[1], reverse=True)
+        #print(sorted_temp)
+        
+        for airline, emissions in sorted_temp:
+            print('\n\n')
+            print(f"{airline}: {emissions} kg CO2 emissions")
+            #root.textbox1.insert("end", 'Airline ' + airline + ' with emission of ' + emissions + 'kg CO2' + '\n')
+
+    
+    def list_all_countries(self, root):
+        self.root = root
+        root.textbox1.insert("end", 'Listing all Countries...' + '\n')
+        for i in self.countries_list.read_data_file():
+            if(i.get('code3') and i.get('name')):
+                root.textbox1.insert("end", 'Country Code ' + i["code3"] + ' is ' + i["name"] + '\n')
+                #print(f'Country name is {i["name"]} and the country code is {i["code3"]}')
+    
     def get_iata_code(self):
         # Get all iata codes
         for i in self.airlines_list.read_data_file():
@@ -329,11 +602,13 @@ class ApiResponse():
             if(i.get('icao_code') == airport_name):               
                 return i['lat'], i['lng']
 
-    def list_all_airlines(self):
+    def list_all_airlines(self, root):
+        self.root = root
         # List all airlines
-        for i in self.airlines_list:
+        for i in self.airlines_list.get_data_from_api():
             try:
-                print(i['name'])
+                root.textbox1.insert("end", 'Airline ' + i['icao_code'] + ' is ' + i['name'] + '\n')
+                #print(f"Airline name is {i['name']} and ICAO CODE is {i['icao_code']}")
             except:
                 pass
             
@@ -350,28 +625,24 @@ class ApiResponse():
 
     
     def list_all_flights(self, root):
-        #List all flights
+        # List all flights
         self.root = root
-        total_result = 0 
-        time.sleep(3)
-        #for i in self.flights_list.get_data_from_api():
-        for i in self.flights_list.read_data_file():
-            if(i.get('dep_icao') and i.get('arr_icao')):
-                try:
-                    print(f"Flight Number is {i['flight_number']} and the airline is {i['flag']} and the aircraft is {i['aircraft_icao']} going from {i['dep_icao']} to {i['arr_icao']}");
-                    print(f'Flight distance is {Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"]))} km');
-                    result = Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
-                    print(f'Flight CO2 emissions is {Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i["dep_icao"]),  ApiResponse().get_airport_cordinates(i["arr_icao"])))} kg');
-                    print(f'{result} kg CO2 emitted into the atmosphere.')
-                    total_result += result
-                    print(f'Total consumption so far is {round(total_result, 2)} KG  per passenger ', flush=True)
-                    #time.sleep(10)               
-                except:
-                    pass
-            else:
+        flights = self.flights_list.get_data_from_api()
+        total_result = 0
+        flights_data = [(i.get('flight_number'), i.get('flag'), i.get('aircraft_icao'), i.get('dep_icao'), i.get('arr_icao')) for i in flights if i.get('dep_icao') and i.get('arr_icao')]
+        for flight_data in flights_data:
+            try:
+                dep_cord = ApiResponse().get_airport_cordinates(flight_data[3])
+                arr_cord = ApiResponse().get_airport_cordinates(flight_data[4])
+                flight_distance = Emissions().calculate_distance(dep_cord, arr_cord)
+                flight_emissions = Emissions().calculate_co2_emissions(flight_distance)
+                print(f"Flight Number is {flight_data[0]} and the airline is {flight_data[1]} and the aircraft is {flight_data[2]} going from {flight_data[3]} to {flight_data[4]}")
+                print(f"Flight distance is {flight_distance} km")
+                print(f"Flight CO2 emissions is {flight_emissions} kg")
+                total_result += flight_emissions
+                print(f"Total consumption so far is {round(total_result, 2)} KG per passenger")
+            except:
                 pass
-                #print("No data available for this one")
-        root.textbox1.insert("end", 'Calculation Complete' + '\n')
     
     def list_all_flights_2(self):
         #List all flights
@@ -408,7 +679,7 @@ class ApiResponse():
                 print(Emissions().is_distance_long_or_short(filter_long_short_haul))
                 result = Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
                 total_result += result
-                print(f'Total consumption from {ApiResponse().get_airport_name(airport_icao)} so far is {round(total_result, 2)} kg ')
+                print(f'Total consumption to {ApiResponse().get_airport_name(airport_icao)} so far is {round(total_result, 2)} kg ')
 
     
     def list_domestic_flights_by_region(self, region_letter):
@@ -523,7 +794,7 @@ class ApiResponse():
         for i in self.flights_list.read_data_file():
             if(i.get('dep_icao') and i.get('arr_icao')):
                 if 'flag' in i and (i['dep_icao'][:1] == i['dep_icao'][:1]):
-                    result += Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
+                    result = Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
                     temp[i['flag']] = temp.get(i['flag'], round(result, 2)) + round(result, 2)
                     print(temp)
                     total_result += result
@@ -538,7 +809,7 @@ class ApiResponse():
             if(i.get('dep_icao') and i.get('arr_icao')):
                 if 'flag' in i:
                     if (i['dep_icao'][:1]) != (i['arr_icao'][:1]):
-                        result += Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
+                        result = Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
                         temp[i['flag']] = temp.get(i['flag'], round(result, 2)) + round(result, 2)
                         print(temp)
                         total_result += result
@@ -552,41 +823,41 @@ class ApiResponse():
         for i in self.flights_list.read_data_file():
             if(i.get('dep_icao') and i.get('arr_icao')):
                 if 'flag' in i:
-                    result += Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
+                    result = Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
                     temp[i['flag']] = temp.get(i['flag'], round(result, 2)) + round(result, 2)
                     print(temp)
                     total_result += result
                     #print(f'Total consumption so far is {round(total_result, 2)} KG  per passenger ')
 
     def list_flights_by_aircraft_type(self):
-        #List all flights by aircraft type
+    #List all flights by aircraft type
         temp = {}
-        total_result = 0 
         result = 0
         for i in self.flights_list.read_data_file():
             if(i.get('dep_icao') and i.get('arr_icao')):
                 if 'aircraft_icao' in i:
-                    result += Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
+                    result = Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao'])))
                     temp[i['aircraft_icao']] = temp.get(i['aircraft_icao'], round(result, 2)) + round(result, 2)
                     print(temp)
-                    total_result += result
                     #print(f'Total consumption so far is {round(total_result, 2)} KG  per passenger ')
+            sorted_temp = sorted(temp.items(), key=lambda x: x[1], reverse=True)[:20]
+            print(sorted_temp)
         
     def list_top_polluted_routes(self):
-        # List top polluted routes given by airport
-         temp = {}
-         result = 0
-         for i in self.routes_list.read_data_file():
-             if(i.get('dep_icao') and i.get('arr_icao')):
-                 result += Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao']))) * sum(len(d) for d in i['days'])
-                 temp[i['dep_icao'] + '-' + i['arr_icao']] = temp.get(i['dep_icao'] + '-' + i['arr_icao'], round(result, 2)) + round(result, 2) 
-                 print(temp)
-                 #print(f'Total consumption so far is {round(total_result, 2)} KG  per passenger ')
-         sorted_temp = sorted(temp.items(), key=lambda x: x[1], reverse=True)
-         print(sorted_temp)
-             
-       
-    
+    # List top polluted routes given by airport taking into account how many days flight is available
+        temp = {}
+        for i in self.routes_list.read_data_file():
+            if i.get('dep_icao') and i.get('arr_icao'):
+                result = Emissions().calculate_co2_emissions(Emissions().calculate_distance(ApiResponse().get_airport_cordinates(i['dep_icao']), ApiResponse().get_airport_cordinates(i['arr_icao']))) * sum(len(d) for d in i['days'])
+                route = i['dep_icao'] + '-' + i['arr_icao']
+                temp[route] = temp.get(route, 0) + result
+                # Print top 20 polluted routes so far
+                top_20 = sorted(temp.items(), key=lambda x: x[1], reverse=True)[:20]
+                print(top_20)
+        # Print final top 20 polluted routes
+        print(sorted(temp.items(), key=lambda x: x[1], reverse=True))
+
+
 class ApiConnector:
     
     def __init__(self, api_get, query_type='flight', detailed_query=None):
@@ -793,9 +1064,8 @@ button1.grid(row=1, column=3, padx=5, pady=10)
 textbox1 = customtkinter.CTkTextbox(master=root)
 textbox1.grid(row=2, column=0, columnspan=4, padx=20, pady=10, sticky="nsew")
 
-
+ApiConnector('airlabs', 'countries').write_to_file()
 """
-
 
 
 ## ApiResponse().list_all_flights()
