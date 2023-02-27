@@ -275,7 +275,7 @@ def test_list_all_flights_2():
 def test_list_flights_with_departure_airport():
     api_con = ApiResponse().list_flights_with_departure_airport('EDDL')
     # next(iter(api_con.items() ))
-    assert next(iter(api_con.items() )) == {'api_key': '26a62db0-6d6b-4ddd-9e9c-5bc2cd4545e4'}
+    assert next(iter(api_con.items() )) == {'api_key': 'xxxxxxxxxxxxxxxxxxxxxx'}
     # while True:
     #     if api_con:
     #         time.sleep(0.005)
@@ -449,7 +449,7 @@ def test_print_api_key(capsys):
     api_key.print_api_key()
     captured_api_key = capsys.readouterr()
     output_api_key = captured_api_key.out.strip()
-    expected_api_key = "{'api_key': '26a62db0-6d6b-4ddd-9e9c-5bc2cd4545e4'}"
+    expected_api_key = "{'api_key': 'xxxxxxxxxx'}"
     assert str(output_api_key) == str(expected_api_key) # PASSING
     
 @pytest.mark.skip()  
