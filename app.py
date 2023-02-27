@@ -364,21 +364,20 @@ df_new = df[['LOCATION', 'Value', 'TIME', 'Time', 'Source of emissions']]
 def get_co2_by_region(region_name):
     #self.root = root
     result = df_new.loc[df_new['LOCATION'] == region_name]
-    print(result)
+    print(result['Value'].sum())
 
     #Get filter region and year
 def get_time_and_region(region_name, year):
     data = df_new.loc[df_new['LOCATION'] == region_name]
     data2 = data.loc[data['TIME'] == year]
-    print(data)
-    print(data2)
+    print(data2['Value'].sum())
 
     #Filter location month and year
 def get_month_year_region(region_name, year):
     data = df_new.loc[df_new['LOCATION'] == region_name]
-    print(data)
+
     data2 = data.loc[data['Time'] == year] 
-    print(data2)
+    print(data2['Value'].sum())
     
     #Print region Austrailia in 2020
     #get_time_and_region('AUS','2020')
