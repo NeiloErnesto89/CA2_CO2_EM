@@ -391,6 +391,8 @@ class Emissions:
     def calculate_co2_emissions(self, flight_distance):
 
    # The following formula is used to calculate the total CO2-equivalent emissions:
+   # Formula derives from myclimate.org and they have all copyrights over it. 
+   # https://www.myclimate.org/fileadmin/user_upload/myclimate_-_home/01_Information/01_About_myclimate/09_Calculation_principles/Documents/myclimate-flight-calculator-documentation_EN.pdf
    # 𝑬 = ()𝒂𝒙 𝟐 +𝒃𝒙 +𝒄 / 𝑺 ∗ 𝑷𝑳𝑭) ∗ (𝟏 −𝑪𝑭) ∗ 𝑪𝑾 ∗ (𝑬𝑭 ∗ 𝑴 + 𝑷)+ 𝐀𝐅 ∗ 𝐱 + �
    #E: CO2-eq emissions per passenger [kg]
    #x: Flight Distance [km] which is defined as the sum of GCD, the great circle distance, and DC, a distance
