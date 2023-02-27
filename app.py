@@ -23,7 +23,9 @@ P = 0.54
 AF = 0.00038
 AFM = 11.68
 
-
+"""
+Main GUI Class
+"""
 class MainGUI(customtkinter.CTk):
     def __init__(self):
         super().__init__()
@@ -31,6 +33,9 @@ class MainGUI(customtkinter.CTk):
         self.geometry("600x500")
         self.title("Flight Pollution Calculator")
         self.minsize(600, 500)
+        
+        photo = tk.PhotoImage(file = 'icon.png')
+        self.wm_iconphoto(False, photo)
         
         # Grid
         self.grid_rowconfigure((0,1,2,3,4), weight=1)
@@ -44,30 +49,31 @@ class MainGUI(customtkinter.CTk):
             if choice == "Check estimated emissions of all of the scheduled flights":
                 self.sub1_menu.configure(state="disabled")
                 self.sub1_menu.configure(values=["disabled"])
-                textvariable = "Disabled"
-                #self.entry1.configure(placeholder_text="Disabled")
                 self.entry1.configure(state="disabled")
-                self.entry1.configure(textvariable=textvariable)
                 self.textbox1.delete(1.0,tk.END)
                 self.textbox1.insert("end", 'Please observe Console, as the calculation is too big for GUI to display!' + '\n\n')
                 self.textbox1.insert("end", 'WARNING: Will take several minutes to finish!' + '\n\n')
                 self.textbox1.insert("end", 'Click Start when ready!' + '\n')
                 
             if choice == "List all Airports":
-                textvariable = "Disabled"
                 self.entry1.configure(placeholder_text="Disabled")
                 self.entry1.configure(state="disabled")
-                self.entry1.configure(textvariable=textvariable)
                 self.sub1_menu.configure(state="disabled")
                 self.sub1_menu.configure(values=["disabled"])
                 self.textbox1.delete(1.0,tk.END)
                 self.textbox1.insert("end", 'Click "Start" when ready!' + '\n')
                 
-            if choice == "Check estimated CO2 emissions over the last five years":
-                #textvariable = ""calculate_co2_emissions
-                #self.entry1.configure(placeholder_text="Disabled")
+            if choice == "List all Airlines":
+                self.entry1.configure(placeholder_text="Disabled")
                 self.entry1.configure(state="disabled")
-                #self.entry1.configure(textvariable=textvariable)
+                self.sub1_menu.configure(state="disabled")
+                self.sub1_menu.configure(values=["disabled"])
+                self.textbox1.delete(1.0,tk.END)
+                self.textbox1.insert("end", 'Click "Start" when ready!' + '\n')
+                
+                
+            if choice == "Check estimated CO2 emissions over the last five years":
+                self.entry1.configure(state="disabled")
                 self.textbox1.delete(1.0,tk.END)
                 self.textbox1.insert("end", 'Please select the Context' + '\n')
                 self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
@@ -82,24 +88,14 @@ class MainGUI(customtkinter.CTk):
                 self.textbox1.insert("end", 'WARNING: Will take several minutes to finish!' + '\n\n')
                 self.textbox1.insert("end", 'Paramenters Required:' + '\n')
                 self.textbox1.insert("end", '     Airport ICAO code (four letters, ex. EIDW for Dublin):' + '\n')
+                self.sub1_menu.configure(state="disabled")
                 self.entry1.configure(state = "normal")
                 self.entry2.configure(state="disabled")
-            
-            """
-            if choice == "What are the most polltuing routes globally, regionally or by country":
-                textvariable = "Disabled"
-                self.entry1.configure(placeholder_text="Disabled")
-                self.entry1.configure(state="disabled")
-                self.entry1.configure(textvariable=textvariable)
-                self.sub1_menu_var = customtkinter.StringVar(value="Please select an option")
-                self.sub1_menu.configure(state="enabled")
-                self.sub1_menu.configure(values=["TBD"])
-            """
             
             if choice == "The total CO2 Emissions by each Airline?":
                 textvariable = "Disabled"
                 self.entry1.configure(placeholder_text="Disabled")
-                self.entry1.configure(state = "normal" )
+                self.entry1.configure(state = "disabled" )
                 self.textbox1.delete(1.0,tk.END)
                 self.textbox1.insert("end", 'Please observe Console, as the calculation is too big for GUI to display!' + '\n\n')
                 self.textbox1.insert("end", 'WARNING: Will take several minutes to finish!' + '\n\n')
@@ -128,9 +124,7 @@ class MainGUI(customtkinter.CTk):
         Sub-Menu Callback
         """
         def sub1_menu_callback(choice):
-            print('Sub Menu Callback: ', end='')
-            print(choice)
-            
+
             if choice == "Last five years by Region":
                 self.sub1_menu_var.set("Last five years by Region")
                 self.entry1.configure(placeholder_text = "Region")
@@ -151,6 +145,7 @@ class MainGUI(customtkinter.CTk):
                 self.textbox1.insert("end", 'Paramenters Required:' + '\n')
                 self.textbox1.insert("end", '     Year into the first parameter box:' + '\n')
                 self.textbox1.insert("end", '     Region Code (three letters) into the second parameter box:' + '\n')
+            
             if choice == "Last five years by Year, Month & Region":
                 self.sub1_menu_var.set("Last five years by Year, Month & Region")
                 self.entry1.configure(placeholder_text = "Year")
@@ -170,6 +165,7 @@ class MainGUI(customtkinter.CTk):
                 self.textbox1.insert("end", 'Note: Please observe the Console for result!' + '\n\n')
                 self.textbox1.insert("end", 'Paramenters Required:' + '\n')
                 self.textbox1.insert("end", '     Region Prefix Code (single letter, ex. E for Northern Europe):' + '\n')
+            
             if choice == "Top most polluting routes by Country":
                 self.sub1_menu_var.set("Top most polluting routes by Country")
                 self.entry1.configure(state = "normal")
@@ -185,6 +181,7 @@ class MainGUI(customtkinter.CTk):
                 self.textbox1.insert("end", 'Note: Please observe the Console for result!' + '\n\n')
                 self.textbox1.insert("end", 'Paramenters Required:' + '\n')
                 self.textbox1.insert("end", '     Airport Code (ex EIDW for Dublin:' + '\n')
+            
             if choice == "Co2 emissions by Arrival":
                 self.sub1_menu_var.set("Co2 emissions by Arrival")
                 self.entry1.configure(state = "normal")
@@ -197,14 +194,17 @@ class MainGUI(customtkinter.CTk):
                 self.sub1_menu_var.set("Top twenty by domestic flights")
                 self.textbox1.delete(1.0,tk.END)
                 self.textbox1.insert("end", 'Note: Please observe the Console for result!' + '\n\n')
+            
             if choice == "Top twenty by international flights":
                 self.sub1_menu_var.set("Top twenty by international flights")
                 self.textbox1.delete(1.0,tk.END)
                 self.textbox1.insert("end", 'Note: Please observe the Console for result!' + '\n\n')
+            
             if choice == "Domestic and international flights combined":
                 self.sub1_menu_var.set("Domestic and international flights combined")
                 self.textbox1.delete(1.0,tk.END)
                 self.textbox1.insert("end", 'Note: Please observe the Console for result!' + '\n\n')
+            
             if choice == "Top twenty by country of aircraft registration":
                 self.sub1_menu_var.set("Top twenty by country of aircraft registration")
                 self.textbox1.delete(1.0,tk.END)
@@ -261,13 +261,7 @@ class MainGUI(customtkinter.CTk):
     def button_start_click(self):
         main_menu_choice = self.main_menu_var.get() 
         sub_menu_choice = self.sub1_menu_var.get()
-        
-        print('Main Menu Choice: ', end='')
-        print(main_menu_choice)
-        
-        print('Sub Menu Choice: ', end='')
-        print(sub_menu_choice)
-        
+                
         if main_menu_choice == "Check estimated emissions of all of the scheduled flights":
             self.textbox1.insert("end", 'Starting!' + '\n')
             ApiResponse().list_all_flights(self)
@@ -275,10 +269,13 @@ class MainGUI(customtkinter.CTk):
             route = self.entry1.get()
             self.textbox1.insert("end", 'Starting!' + '\n')
             self.textbox1.insert("end", 'Getting data from Airlabs API...' + '\n')
-            ApiConnector('airlabs', 'routes').save_routes(route)
-            self.textbox1.insert("end", 'Calculating...' + '\n')
-            ApiResponse().list_top_polluted_routes()
-            self.textbox1.insert("end", 'Done!' + '\n')
+            try:
+                ApiConnector('airlabs', 'routes').save_routes(route)
+                self.textbox1.insert("end", 'Calculating...' + '\n')
+                ApiResponse().list_top_polluted_routes()
+                self.textbox1.insert("end", 'Done!' + '\n')
+            except:
+                print('Unknown exception')
         elif main_menu_choice == "List all Airports":
             ApiResponse().list_all_airports(self)
         elif main_menu_choice == "List all Countries":
@@ -316,8 +313,11 @@ class MainGUI(customtkinter.CTk):
         if sub_menu_choice == "Co2 emissions by Departure":
             self.textbox1.insert("end", 'Calculating...' + '\n')
             dep_airport = self.entry1.get()
-            ApiResponse().list_flights_with_departure_airport(dep_airport)
-            self.textbox1.insert("end", 'Done!' + '\n')
+            try:
+                ApiResponse().list_flights_with_departure_airport(dep_airport)
+                self.textbox1.insert("end", 'Done!' + '\n')
+            except:
+                self.textbox1.insert("end", 'Invalid Parameter entered or API error!' + '\n')
         if sub_menu_choice == "Co2 emissions by Arrival":
             self.textbox1.insert("end", 'Calculating...' + '\n')
             arr_airport = self.entry1.get()
@@ -346,7 +346,6 @@ root = MainGUI()
 
 
 def is_long_haul(flight_distance):
-    # if flight_distance below 1500 mark as short haul
     if (flight_distance < 1500):
         return False
     else:
@@ -894,11 +893,12 @@ class ApiConnector:
         # Get Data From Api
         params = {'api_key':  keys.AIRLABS_KEY }
         params["_fields"]= self.detailed_query
-        print(params)
-        api_result = requests.get(self.api_url, params)
-        api_response = api_result.json()
-            
-        return api_response['response']
+        try:
+            api_result = requests.get(self.api_url, params)
+            api_response = api_result.json()
+            return api_response['response']
+        except:
+            print('API Error! Please try again later (API may be throttling your IP)')
 
     def write_to_file(self):
         # Write data to file
